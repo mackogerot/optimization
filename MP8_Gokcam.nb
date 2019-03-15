@@ -1,0 +1,156 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 11.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      5239,        146]
+NotebookOptionsPosition[      4806,        129]
+NotebookOutlinePosition[      5158,        145]
+CellTagsIndexPosition[      5115,        142]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"vars", "=", 
+   RowBox[{"{", 
+    RowBox[{
+    "x1", ",", "x2", ",", "x3", ",", "x4", ",", "x5", ",", "x6", ",", "x7", 
+     ",", " ", "o1", ",", "o2", ",", "o3", ",", "o4", ",", "o5", ",", "o6", 
+     ",", "o7"}], "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"constraints", "=", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"8", 
+      RowBox[{"(", 
+       RowBox[{"x1", "+", "x4", "+", "x5", "+", "x6", "+", "x7", "+", "o3"}], 
+       ")"}]}], "\[GreaterEqual]", "400"}], "&&", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"8", 
+      RowBox[{"(", 
+       RowBox[{"x1", "+", "x2", "+", "x5", "+", "x6", "+", "x7", "+", "o4"}], 
+       ")"}]}], "\[GreaterEqual]", "200"}], "&&", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"8", 
+      RowBox[{"(", 
+       RowBox[{"x1", "+", "x2", "+", "x3", "+", "x6", "+", "x7", "+", "o5"}], 
+       ")"}]}], "\[GreaterEqual]", "200"}], "&&", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"8", 
+      RowBox[{"(", 
+       RowBox[{"x1", "+", "x2", "+", "x3", "+", "x4", "+", "x7", "+", "o6"}], 
+       ")"}]}], "\[GreaterEqual]", "250"}], "&&", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"8", 
+      RowBox[{"(", 
+       RowBox[{"x1", "+", "x2", "+", "x3", "+", "x4", "+", "x5", "+", "o7"}], 
+       ")"}]}], "\[GreaterEqual]", "250"}], "&&", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"8", 
+      RowBox[{"(", 
+       RowBox[{"x2", "+", "x3", "+", "x4", "+", "x5", "+", "x6", "+", "o1"}], 
+       ")"}]}], "\[GreaterEqual]", "300"}], "&&", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"8", 
+      RowBox[{"(", 
+       RowBox[{"x3", "+", "x4", "+", "x5", "+", "x6", "+", "x7", "+", "o2"}], 
+       ")"}]}], "\[GreaterEqual]", "400"}], "&&", "\[IndentingNewLine]", 
+    RowBox[{"x1", "\[GreaterEqual]", "0"}], "&&", 
+    RowBox[{"x2", "\[GreaterEqual]", "0"}], "&&", 
+    RowBox[{"x3", "\[GreaterEqual]", "0"}], "&&", 
+    RowBox[{"x4", "\[GreaterEqual]", "0"}], "&&", 
+    RowBox[{"x5", "\[GreaterEqual]", "0"}], "&&", 
+    RowBox[{"x6", "\[GreaterEqual]", "0"}], "&&", 
+    RowBox[{"x7", "\[GreaterEqual]", "0"}], "&&", "\[IndentingNewLine]", 
+    RowBox[{"o1", "\[GreaterEqual]", "0"}], "&&", 
+    RowBox[{"o2", "\[GreaterEqual]", "0"}], "&&", 
+    RowBox[{"o3", "\[GreaterEqual]", "0"}], "&&", 
+    RowBox[{"o4", "\[GreaterEqual]", "0"}], "&&", 
+    RowBox[{"o5", "\[GreaterEqual]", "0"}], "&&", 
+    RowBox[{"o6", "\[GreaterEqual]", "0"}], "&&", 
+    RowBox[{"o7", "\[GreaterEqual]", "0"}]}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"objective", "=", 
+   RowBox[{
+    RowBox[{"80", "*", "5", 
+     RowBox[{"(", 
+      RowBox[{
+      "x1", "+", "x2", "+", "x3", "+", "x4", "+", "x5", "+", "x6", "+", 
+       "x7"}], ")"}]}], "+", 
+    RowBox[{"90", 
+     RowBox[{"(", 
+      RowBox[{
+      "o1", "+", "o2", "+", "o3", "+", "o4", "+", "o5", "+", "o6", "+", 
+       "o7"}], ")"}]}]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Minimize", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"objective", ",", "constraints"}], "}"}], ",", "vars", ",", 
+   "Integers"}], "]"}], "\[IndentingNewLine]"}], "Input",
+ CellChangeTimes->{
+  3.76010793195337*^9, {3.760107992320551*^9, 3.760107997974141*^9}, {
+   3.760108734196124*^9, 3.76010889611856*^9}},
+ CellLabel->"In[1]:=",ExpressionUUID->"2f52dde4-ba92-4b9f-addd-a8ef5159b00c"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"20330", ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"x1", "\[Rule]", "0"}], ",", 
+     RowBox[{"x2", "\[Rule]", "0"}], ",", 
+     RowBox[{"x3", "\[Rule]", "0"}], ",", 
+     RowBox[{"x4", "\[Rule]", "22"}], ",", 
+     RowBox[{"x5", "\[Rule]", "0"}], ",", 
+     RowBox[{"x6", "\[Rule]", "16"}], ",", 
+     RowBox[{"x7", "\[Rule]", "9"}], ",", 
+     RowBox[{"o1", "\[Rule]", "0"}], ",", 
+     RowBox[{"o2", "\[Rule]", "3"}], ",", 
+     RowBox[{"o3", "\[Rule]", "3"}], ",", 
+     RowBox[{"o4", "\[Rule]", "0"}], ",", 
+     RowBox[{"o5", "\[Rule]", "0"}], ",", 
+     RowBox[{"o6", "\[Rule]", "1"}], ",", 
+     RowBox[{"o7", "\[Rule]", "10"}]}], "}"}]}], "}"}]], "Output",
+ CellChangeTimes->{3.7601089001029882`*^9},
+ CellLabel->"Out[4]=",ExpressionUUID->"46b5526b-d168-4727-8268-2091208bf632"]
+}, Open  ]]
+},
+WindowSize->{808, 595},
+WindowMargins->{{4, Automatic}, {Automatic, 4}},
+FrontEndVersion->"11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 5, \
+2018)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 3374, 82, 304, "Input",ExpressionUUID->"2f52dde4-ba92-4b9f-addd-a8ef5159b00c"],
+Cell[3957, 106, 833, 20, 56, "Output",ExpressionUUID->"46b5526b-d168-4727-8268-2091208bf632"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
+

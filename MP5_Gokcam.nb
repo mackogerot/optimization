@@ -1,0 +1,101 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 11.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      2845,         93]
+NotebookOptionsPosition[      2414,         76]
+NotebookOutlinePosition[      2766,         92]
+CellTagsIndexPosition[      2723,         89]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"vars", "=", 
+   RowBox[{"{", 
+    RowBox[{"banana", ",", " ", "rice"}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"objective", " ", "=", " ", 
+   RowBox[{
+    RowBox[{"6", "banana"}], " ", "+", " ", "rice"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"constraints", "=", "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{"vitamin", " ", "A", " ", "requirements"}], "*)"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{
+      RowBox[{"5", "banana"}], "+", "rice"}], ">=", "3"}], "&&", 
+    "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{"vitamin", " ", "C", " ", "requirements"}], "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"banana", "+", "rice"}], ">=", "1.5"}], "&&", 
+    "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{"laws", " ", "of", " ", "the", " ", "universe"}], "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{"banana", "\[GreaterEqual]", "0"}], "&&", "\[IndentingNewLine]", 
+    RowBox[{"rice", "\[GreaterEqual]", "0"}]}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Minimize", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"objective", ",", "constraints"}], "}"}], ",", "vars"}], 
+  "]"}]}], "Input",
+ CellChangeTimes->{{3.75881699576993*^9, 3.7588171735027113`*^9}, {
+  3.758817220546864*^9, 3.7588172253934507`*^9}},
+ CellLabel->"",ExpressionUUID->"7c2e2675-1fe2-436b-9a21-db381223da38"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"3.375`", ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"banana", "\[Rule]", "0.375`"}], ",", 
+     RowBox[{"rice", "\[Rule]", "1.125`"}]}], "}"}]}], "}"}]], "Output",
+ CellChangeTimes->{3.75881709652071*^9, 3.758817136982336*^9, 
+  3.7588171751005287`*^9},
+ CellLabel->"Out[12]=",ExpressionUUID->"0c50995c-01d4-43dc-8b52-f4797618e173"]
+}, Open  ]]
+},
+WindowSize->{808, 596},
+WindowMargins->{{4, Automatic}, {Automatic, 4}},
+FrontEndVersion->"11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 5, \
+2018)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 1437, 40, 241, "Input",ExpressionUUID->"7c2e2675-1fe2-436b-9a21-db381223da38"],
+Cell[2020, 64, 378, 9, 34, "Output",ExpressionUUID->"0c50995c-01d4-43dc-8b52-f4797618e173"]
+}, Open  ]]
+}
+]
+*)
+

@@ -1,0 +1,125 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 11.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      3843,        115]
+NotebookOptionsPosition[      3408,         98]
+NotebookOutlinePosition[      3764,        114]
+CellTagsIndexPosition[      3721,        111]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"vars", "=", 
+   RowBox[{"{", 
+    RowBox[{"s1", ",", "s2", ",", "s3"}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"objective", "=", 
+   RowBox[{
+    RowBox[{"0.23", "s1"}], "+", 
+    RowBox[{"0.18", "s2"}], "+", 
+    RowBox[{"0.17", "s3"}]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"constraints", "=", "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{"Large", " ", "clam", " ", "minimum"}], "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{
+      RowBox[{
+       RowBox[{"0.4", "s1"}], "+", 
+       RowBox[{"0.3", "s2"}], "+", 
+       RowBox[{"0.3", "s3"}]}], "\[GreaterEqual]", "600"}], "&&", 
+     "\[IndentingNewLine]", 
+     RowBox[{"(*", 
+      RowBox[{"Medium", " ", "clam", " ", "minimum"}], "*)"}], 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"0.3", "s1"}], "+", 
+       RowBox[{"0.35", "s2"}], "+", 
+       RowBox[{"0.3", "s3"}]}], "\[GreaterEqual]", "500"}], "&&", 
+     "\[IndentingNewLine]", 
+     RowBox[{"(*", 
+      RowBox[{"Small", " ", "clam", " ", "minimum"}], "*)"}], 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"0.3", "s1"}], "+", 
+       RowBox[{"0.35", "s2"}], "+", 
+       RowBox[{"0.4", "s3"}]}], "\[GreaterEqual]", "500"}], "&&", 
+     "\[IndentingNewLine]", 
+     RowBox[{"(*", 
+      RowBox[{"Supplier", " ", "limitations"}], "*)"}], "\[IndentingNewLine]", 
+     RowBox[{"s1", "\[LessEqual]", "800"}], "&&", "\[IndentingNewLine]", 
+     RowBox[{"s2", "\[LessEqual]", "800"}], "&&", "\[IndentingNewLine]", 
+     RowBox[{"s3", "\[LessEqual]", "800"}], "&&", "\[IndentingNewLine]", 
+     RowBox[{"(*", 
+      RowBox[{"Basic", " ", "laws", " ", "of", " ", "physics"}], "*)"}], 
+     "\[IndentingNewLine]", 
+     RowBox[{"s1", "\[GreaterEqual]", "0"}], "&&", "\[IndentingNewLine]", 
+     RowBox[{"s2", "\[GreaterEqual]", "0"}], "&&", "\[IndentingNewLine]", 
+     RowBox[{"s3", "\[GreaterEqual]", "0"}]}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{"Minimize", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"objective", ",", "constraints"}], "}"}], ",", "vars"}], 
+  "]"}]}], "Input",
+ CellChangeTimes->{{3.758508043353808*^9, 3.7585082029129763`*^9}, {
+  3.7585083584872293`*^9, 3.758508379270343*^9}},
+ CellLabel->"In[5]:=",ExpressionUUID->"0e16e5db-076e-4a07-9e03-02efa2eeab01"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"344.00000000000006`", ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"s1", "\[Rule]", "800.`"}], ",", 
+     RowBox[{"s2", "\[Rule]", "133.3333333333336`"}], ",", 
+     RowBox[{"s3", "\[Rule]", "800.`"}]}], "}"}]}], "}"}]], "Output",
+ CellChangeTimes->{3.758508203702106*^9, 3.758508381350377*^9},
+ CellLabel->"Out[8]=",ExpressionUUID->"b9edeed2-fbaa-4159-a5b6-f860e61027f1"]
+}, Open  ]]
+},
+WindowSize->{808, 596},
+WindowMargins->{{Automatic, -38}, {-44, Automatic}},
+FrontEndVersion->"11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 5, \
+2018)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 2393, 62, 409, "Input",ExpressionUUID->"0e16e5db-076e-4a07-9e03-02efa2eeab01"],
+Cell[2976, 86, 416, 9, 68, "Output",ExpressionUUID->"b9edeed2-fbaa-4159-a5b6-f860e61027f1"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
+

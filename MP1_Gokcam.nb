@@ -1,0 +1,135 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 11.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      4615,        125]
+NotebookOptionsPosition[      4181,        108]
+NotebookOutlinePosition[      4535,        124]
+CellTagsIndexPosition[      4492,        121]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"vars", " ", "=", " ", 
+    RowBox[{"{", 
+     RowBox[{"soy", ",", "oat"}], "}"}]}], ";"}], "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{
+    "A", " ", "price", " ", "per", " ", "acre", " ", "stat", " ", "can", " ", 
+     "easily", " ", "be", " ", "created", " ", "from", " ", "given", " ", 
+     "data"}], ",", " ", 
+    RowBox[{"as", " ", 
+     RowBox[{"price", "/", "bushels"}], " ", "and", " ", 
+     RowBox[{"bushels", "/", "acre"}], " ", "rate", " ", "is", " ", "fixed"}],
+     ",", " ", 
+    RowBox[{"simplifying", " ", "the", " ", 
+     RowBox[{"problem", ".", " ", "Soy"}], " ", "yields", " ", "30", " ", 
+     "price", " ", "units", " ", "per", " ", "acre"}], ",", " ", 
+    RowBox[{"oats", " ", "yield", " ", "80."}]}], 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"objective", " ", "=", " ", 
+   RowBox[{
+    RowBox[{"30", "soy"}], "+", 
+    RowBox[{"80", "oat"}]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"constraints", "=", "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+      RowBox[{
+      "gov", " ", "restriction", " ", "on", " ", "acres", " ", "of", " ", 
+       "soy", " ", "needed", " ", "to", " ", "yield", " ", "30", " ", 
+       "bushels"}], ",", " ", 
+      RowBox[{
+      "which", " ", "can", " ", "be", " ", "achieved", " ", "through", " ", 
+       "planting", " ", "3", " ", "acres", " ", "of", " ", 
+       RowBox[{"soy", "."}]}]}], "*)"}], "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"soy", "\[GreaterEqual]", "3"}], "&&", "\[IndentingNewLine]", 
+     RowBox[{"(*", 
+      RowBox[{"basic", " ", "physical", " ", "realities"}], "*)"}], 
+     "\[IndentingNewLine]", 
+     RowBox[{"soy", "\[GreaterEqual]", "0"}], "&&", "\[IndentingNewLine]", 
+     RowBox[{"oat", "\[GreaterEqual]", "0"}], "&&", "\[IndentingNewLine]", 
+     RowBox[{"(*", 
+      RowBox[{"labor", " ", "restrictions"}], "*)"}], "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"5", "soy"}], "+", 
+       RowBox[{"7", "oat"}]}], "\[LessEqual]", "400"}], "&&", 
+     "\[IndentingNewLine]", 
+     RowBox[{"(*", 
+      RowBox[{"land", " ", "restrictions"}], "*)"}], "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"soy", "+", "oat"}], "\[LessEqual]", "100"}]}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Maximize", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"objective", ",", "constraints"}], "}"}], ",", "vars"}], "]"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]"}], "Input",
+ CellChangeTimes->{{3.757866645978537*^9, 3.757866658211528*^9}, {
+  3.757867949611093*^9, 3.757867954239402*^9}, {3.757868302646634*^9, 
+  3.757868306635354*^9}, {3.757868349936489*^9, 3.757868355016261*^9}, {
+  3.757868415109097*^9, 3.757868417827688*^9}, {3.757868491090126*^9, 
+  3.757868515787949*^9}, {3.75786857655925*^9, 3.7578687809621687`*^9}, {
+  3.757868874072288*^9, 3.757868895803007*^9}, {3.75786903501784*^9, 
+  3.757869150898252*^9}},
+ CellLabel->"In[29]:=",ExpressionUUID->"82e25c4a-94e8-4d93-adda-7506e9d26cbd"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"4490", ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"soy", "\[Rule]", "3"}], ",", 
+     RowBox[{"oat", "\[Rule]", "55"}]}], "}"}]}], "}"}]], "Output",
+ CellChangeTimes->{{3.7578687126713543`*^9, 3.757868741666407*^9}, 
+   3.7578687832650843`*^9, {3.7578688750779467`*^9, 3.757868896264915*^9}, {
+   3.75786910789571*^9, 3.757869120697062*^9}, 3.757869163474045*^9},
+ CellLabel->"Out[32]=",ExpressionUUID->"060e510f-74cf-4b20-b73f-9dffb7e5a7eb"]
+}, Open  ]]
+},
+WindowSize->{808, 599},
+WindowMargins->{{Automatic, 0}, {-51, Automatic}},
+FrontEndVersion->"11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 5, \
+2018)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 3094, 71, 430, "Input",ExpressionUUID->"82e25c4a-94e8-4d93-adda-7506e9d26cbd"],
+Cell[3677, 95, 488, 10, 34, "Output",ExpressionUUID->"060e510f-74cf-4b20-b73f-9dffb7e5a7eb"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
+

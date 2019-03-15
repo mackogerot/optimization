@@ -1,0 +1,317 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 11.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     14101,        309]
+NotebookOptionsPosition[     13467,        290]
+NotebookOutlinePosition[     13821,        306]
+CellTagsIndexPosition[     13778,        303]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"vars", " ", "=", " ", 
+   RowBox[{"{", 
+    RowBox[{
+    "ftmon", ",", "fttue", ",", "ftwed", ",", "ftthu", ",", "ftfri", ",", 
+     "ftsat", ",", "ftsun", ",", " ", "ptmon", ",", "pttue", ",", "ptwed", 
+     ",", "ptthu", ",", "ptfri", ",", "ptsat", ",", "ptsun"}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"ft", " ", "=", " ", 
+   RowBox[{
+   "ftmon", "+", "fttue", "+", "ftwed", "+", "ftthu", "+", "ftfri", "+", 
+    "ftsat", "+", "ftsun"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"pt", " ", "=", " ", 
+   RowBox[{
+   "ptmon", "+", "pttue", "+", "ptwed", "+", "ptthu", "+", "ptfri", "+", 
+    "ptsat", "+", "ptsun"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"objective", " ", "=", " ", 
+   RowBox[{
+    RowBox[{"400", "ft"}], " ", "+", " ", 
+    RowBox[{"160", "pt"}]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"constraints", " ", "=", "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{"Employees", " ", "working", " ", "on", " ", "a", " ", 
+      RowBox[{"Monday", " ", "--"}], " ", "no", " ", "Tue"}], ",", " ", 
+     "Wed"}], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{
+      RowBox[{"8", "*", 
+       RowBox[{"(", 
+        RowBox[{"ft", "-", "fttue", " ", "-", "ftwed"}], ")"}]}], "+", 
+      RowBox[{"4", "*", 
+       RowBox[{"(", 
+        RowBox[{"pt", "-", "pttue", "-", "ptwed"}], ")"}]}]}], " ", 
+     "\[GreaterEqual]", " ", "200"}], "&&", "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+      RowBox[{"Employees", " ", "working", " ", "on", " ", "a", " ", 
+       RowBox[{"Tuesday", " ", "--"}], " ", "no", " ", "Wed"}], ",", " ", 
+      "Thu"}], "*)"}], "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"8", "*", 
+       RowBox[{"(", 
+        RowBox[{"ft", "-", "ftwed", " ", "-", "ftthu"}], ")"}]}], "+", 
+      RowBox[{"4", "*", 
+       RowBox[{"(", 
+        RowBox[{"pt", "-", "ptwed", "-", "ptthu"}], ")"}]}]}], " ", 
+     "\[GreaterEqual]", " ", "200"}], "&&", "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+      RowBox[{"Employees", " ", "working", " ", "on", " ", "a", " ", 
+       RowBox[{"Wednesday", " ", "--"}], " ", "no", " ", "Thu"}], ",", " ", 
+      "Fri"}], "*)"}], "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"8", "*", 
+       RowBox[{"(", 
+        RowBox[{"ft", "-", "ftthu", " ", "-", "ftfri"}], ")"}]}], "+", 
+      RowBox[{"4", "*", 
+       RowBox[{"(", 
+        RowBox[{"pt", "-", "ptthu", "-", "ptfri"}], ")"}]}]}], " ", 
+     "\[GreaterEqual]", " ", "250"}], "&&", "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+      RowBox[{"Employees", " ", "working", " ", "on", " ", "a", " ", 
+       RowBox[{"Thursday", " ", "--"}], " ", "no", " ", "Fri"}], ",", " ", 
+      "Sat"}], "*)"}], "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"8", "*", 
+       RowBox[{"(", 
+        RowBox[{"ft", "-", "ftfri", " ", "-", "ftsat"}], ")"}]}], "+", 
+      RowBox[{"4", "*", 
+       RowBox[{"(", 
+        RowBox[{"pt", "-", "ptfri", "-", "ptsat"}], ")"}]}]}], " ", 
+     "\[GreaterEqual]", " ", "250"}], "&&", 
+    RowBox[{"(*", 
+     RowBox[{
+      RowBox[{"Employees", " ", "working", " ", "on", " ", "a", " ", 
+       RowBox[{"Friday", " ", "--"}], " ", "no", " ", "Sat"}], ",", " ", 
+      "Sun"}], "*)"}], "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"8", "*", 
+       RowBox[{"(", 
+        RowBox[{"ft", "-", "ftsat", " ", "-", "ftsun"}], ")"}]}], "+", 
+      RowBox[{"4", "*", 
+       RowBox[{"(", 
+        RowBox[{"pt", "-", "ptsat", "-", "ptsun"}], ")"}]}]}], " ", 
+     "\[GreaterEqual]", " ", "300"}], "&&", "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+      RowBox[{"Employees", " ", "working", " ", "on", " ", "a", " ", 
+       RowBox[{"Saturday", " ", "--"}], " ", "no", " ", "Sun"}], ",", " ", 
+      "Mon"}], "*)"}], "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"8", "*", 
+       RowBox[{"(", 
+        RowBox[{"ft", "-", "ftsun", " ", "-", "ftmon"}], ")"}]}], "+", 
+      RowBox[{"4", "*", 
+       RowBox[{"(", 
+        RowBox[{"pt", "-", "ptsun", "-", "ptmon"}], ")"}]}]}], " ", 
+     "\[GreaterEqual]", " ", "400"}], "&&", "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+      RowBox[{"Employees", " ", "working", " ", "on", " ", "a", " ", 
+       RowBox[{"Sunday", " ", "--"}], " ", "no", " ", "Mon"}], ",", " ", 
+      "Tue"}], "*)"}], "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"8", "*", 
+       RowBox[{"(", 
+        RowBox[{"ft", "-", "ftmon", " ", "-", "fttue"}], ")"}]}], "+", 
+      RowBox[{"4", "*", 
+       RowBox[{"(", 
+        RowBox[{"pt", "-", "ptmon", "-", "pttue"}], ")"}]}]}], " ", 
+     "\[GreaterEqual]", " ", "400"}], "&&", "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{"Union", " ", "requirements"}], "*)"}], "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"ft", "/", "pt"}], "\[GreaterEqual]", "3"}], "&&", 
+    "\[IndentingNewLine]", 
+    RowBox[{"(*", 
+     RowBox[{
+      RowBox[{"Can", "'"}], "t", " ", "work", " ", "negative", " ", "hours"}],
+      "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"ftmon", "\[GreaterEqual]", "0"}], "&&", 
+    RowBox[{"fttue", "\[GreaterEqual]", "0"}], "&&", 
+    RowBox[{"ftwed", "\[GreaterEqual]", "0"}], "&&", 
+    RowBox[{"ftthu", "\[GreaterEqual]", "0"}], "&&", 
+    RowBox[{"ftfri", "\[GreaterEqual]", "0"}], "&&", 
+    RowBox[{"ftsat", "\[GreaterEqual]", "0"}], "&&", 
+    RowBox[{"ftsun", "\[GreaterEqual]", "0"}], "&&", "\[IndentingNewLine]", 
+    RowBox[{"ptmon", "\[GreaterEqual]", "0"}], "&&", 
+    RowBox[{"pttue", "\[GreaterEqual]", "0"}], "&&", 
+    RowBox[{"ptwed", "\[GreaterEqual]", "0"}], "&&", 
+    RowBox[{"ptthu", "\[GreaterEqual]", "0"}], "&&", 
+    RowBox[{"ptfri", "\[GreaterEqual]", "0"}], "&&", 
+    RowBox[{"ptsat", "\[GreaterEqual]", "0"}], "&&", 
+    RowBox[{"ptsun", "\[GreaterEqual]", "0"}]}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Minimize", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"objective", ",", "constraints"}], "}"}], ",", "vars", ",", " ", 
+   "Integers"}], "]"}], "\[IndentingNewLine]"}], "Input",
+ CellChangeTimes->{{3.7596669111923523`*^9, 3.759666917204164*^9}, {
+   3.759667128846538*^9, 3.759667132890905*^9}, {3.7596672475695267`*^9, 
+   3.759667247718947*^9}, {3.759684599170988*^9, 3.7596846723854218`*^9}, {
+   3.759684767191442*^9, 3.759684771018368*^9}, {3.759684919252833*^9, 
+   3.759684945743487*^9}, {3.759685165047646*^9, 3.7596852070935707`*^9}, {
+   3.759685277836423*^9, 3.759685318739601*^9}, {3.759685377833186*^9, 
+   3.759685679415609*^9}, 3.759689833992837*^9, {3.759689902706595*^9, 
+   3.759689909866474*^9}, {3.759689963180025*^9, 3.759689963946301*^9}, {
+   3.7599671559528837`*^9, 3.75996715724396*^9}, {3.760100391855791*^9, 
+   3.760100395073411*^9}, {3.760100430743786*^9, 3.760100454453459*^9}},
+ CellLabel->"In[1]:=",ExpressionUUID->"c3ea8853-65de-45fe-a7ed-e8623f7caab0"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "NMinimize","incst",
+   "\"\\!\\(\\*RowBox[{\\\"NMinimize\\\"}]\\) was unable to generate any \
+initial points satisfying the inequality constraints \\!\\(\\*RowBox[{\\\"{\\\
+\", RowBox[{RowBox[{RowBox[{RowBox[{\\\"200.`\\\", \
+\\\"\[VeryThinSpace]\\\"}], \\\"-\\\", RowBox[{\\\"8\\\", \\\" \\\", RowBox[{\
+\\\"(\\\", RowBox[{RowBox[{\\\"Round\\\", \\\"[\\\", \\\"ftfri\\\", \
+\\\"]\\\"}], \\\"+\\\", RowBox[{\\\"Round\\\", \\\"[\\\", \\\"ftmon\\\", \
+\\\"]\\\"}], \\\"+\\\", RowBox[{\\\"Round\\\", \\\"[\\\", \\\"ftsat\\\", \
+\\\"]\\\"}], \\\"+\\\", RowBox[{\\\"Round\\\", \\\"[\\\", \\\"ftsun\\\", \
+\\\"]\\\"}], \\\"+\\\", RowBox[{\\\"Round\\\", \\\"[\\\", \\\"ftthu\\\", \
+\\\"]\\\"}]}], \\\")\\\"}]}], \\\"-\\\", RowBox[{\\\"4\\\", \\\" \\\", \
+RowBox[{\\\"(\\\", RowBox[{RowBox[{\\\"Round\\\", \\\"[\\\", \\\"ptfri\\\", \
+\\\"]\\\"}], \\\"+\\\", RowBox[{\\\"Round\\\", \\\"[\\\", \\\"ptmon\\\", \
+\\\"]\\\"}], \\\"+\\\", RowBox[{\\\"Round\\\", \\\"[\\\", \\\"ptsat\\\", \
+\\\"]\\\"}], \\\"+\\\", RowBox[{\\\"Round\\\", \\\"[\\\", \\\"ptsun\\\", \
+\\\"]\\\"}], \\\"+\\\", RowBox[{\\\"Round\\\", \\\"[\\\", \\\"ptthu\\\", \
+\\\"]\\\"}]}], \\\")\\\"}]}]}], \\\"\[LessEqual]\\\", \\\"0\\\"}], \\\",\\\", \
+RowBox[{\\\"\[LeftSkeleton]\\\", \\\"6\\\", \\\"\[RightSkeleton]\\\"}], \\\",\
+\\\", RowBox[{RowBox[{RowBox[{\\\"3.`\\\", \\\"\[VeryThinSpace]\\\"}], \
+\\\"-\\\", FractionBox[RowBox[{RowBox[{\\\"Round\\\", \\\"[\\\", \
+\\\"ftfri\\\", \\\"]\\\"}], \\\"+\\\", RowBox[{\\\"Round\\\", \\\"[\\\", \
+\\\"ftmon\\\", \\\"]\\\"}], \\\"+\\\", RowBox[{\\\"Round\\\", \\\"[\\\", \
+\\\"ftsat\\\", \\\"]\\\"}], \\\"+\\\", RowBox[{\\\"\[LeftSkeleton]\\\", \\\"1\
+\\\", \\\"\[RightSkeleton]\\\"}], \\\"+\\\", RowBox[{\\\"Round\\\", \
+\\\"[\\\", \\\"ftthu\\\", \\\"]\\\"}], \\\"+\\\", RowBox[{\\\"Round\\\", \
+\\\"[\\\", \\\"fttue\\\", \\\"]\\\"}], \\\"+\\\", RowBox[{\\\"Round\\\", \
+\\\"[\\\", \\\"ftwed\\\", \\\"]\\\"}]}], RowBox[{RowBox[{\\\"Round\\\", \\\"[\
+\\\", \\\"ptfri\\\", \\\"]\\\"}], \\\"+\\\", RowBox[{\\\"Round\\\", \
+\\\"[\\\", \\\"ptmon\\\", \\\"]\\\"}], \\\"+\\\", RowBox[{\\\"Round\\\", \
+\\\"[\\\", \\\"ptsat\\\", \\\"]\\\"}], \\\"+\\\", RowBox[{\\\"\[LeftSkeleton]\
+\\\", \\\"1\\\", \\\"\[RightSkeleton]\\\"}], \\\"+\\\", \
+RowBox[{\\\"Round\\\", \\\"[\\\", \\\"ptthu\\\", \\\"]\\\"}], \\\"+\\\", \
+RowBox[{\\\"Round\\\", \\\"[\\\", \\\"pttue\\\", \\\"]\\\"}], \\\"+\\\", \
+RowBox[{\\\"Round\\\", \\\"[\\\", \\\"ptwed\\\", \\\"]\\\"}]}]]}], \\\"\
+\[LessEqual]\\\", \\\"0\\\"}]}], \\\"}\\\"}]\\). The initial region specified \
+may not contain any feasible points. Changing the initial region or \
+specifying explicit initial points may provide a better solution.\"",2,30,9,
+   15863010400940296762,"Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ CellChangeTimes->{
+  3.75968984750207*^9, 3.7596899133135023`*^9, 3.75996715840184*^9, {
+   3.760100372761921*^9, 3.760100398106436*^9}, 3.760100441495232*^9},
+ CellLabel->
+  "During evaluation of \
+In[25]:=",ExpressionUUID->"c0ded4d2-68aa-408d-8451-36456085155c"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "NMinimize","nnum",
+   "\"The function value \\!\\(\\*RowBox[{\\\"Indeterminate\\\"}]\\) is not a \
+number at \\!\\(\\*RowBox[{\\\"{\\\", RowBox[{\\\"ftfri\\\", \\\",\\\", \
+\\\"ftmon\\\", \\\",\\\", \\\"ftsat\\\", \\\",\\\", \\\"ftsun\\\", \\\",\\\", \
+\\\"ftthu\\\", \\\",\\\", \\\"fttue\\\", \\\",\\\", \\\"ftwed\\\", \\\",\\\", \
+\\\"ptfri\\\", \\\",\\\", \\\"ptmon\\\", \\\",\\\", \\\"ptsat\\\", \\\",\\\", \
+\\\"ptsun\\\", \\\",\\\", \\\"ptthu\\\", \\\",\\\", \\\"pttue\\\", \\\",\\\", \
+\\\"ptwed\\\"}], \\\"}\\\"}]\\) = \\!\\(\\*RowBox[{\\\"{\\\", \
+RowBox[{\\\"0.0026997691911208126`\\\", \\\",\\\", \
+\\\"0.9146719637274783`\\\", \\\",\\\", \\\"0.0008213014769711035`\\\", \\\",\
+\\\", \\\"0.0004959578010127184`\\\", \\\",\\\", \
+\\\"0.20217129133746786`\\\", \\\",\\\", \\\"0.0005310695518852171`\\\", \
+\\\",\\\", \\\"0.0044078137133716925`\\\", \\\",\\\", \
+\\\"0.16045442275463473`\\\", \\\",\\\", \\\"0.012249085720903052`\\\", \\\",\
+\\\", \\\"0.4318430661605881`\\\", \\\",\\\", \\\"0.0032382313770187863`\\\", \
+\\\",\\\", \\\"0.07985010599074832`\\\", \\\",\\\", \\\"0.1515988145769514`\\\
+\", \\\",\\\", \\\"0.0040342120358576004`\\\"}], \\\"}\\\"}]\\).\"",2,30,10,
+   15863010400940296762,"Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ CellChangeTimes->{
+  3.75968984750207*^9, 3.7596899133135023`*^9, 3.75996715840184*^9, {
+   3.760100372761921*^9, 3.760100398106436*^9}, 3.760100441950569*^9},
+ CellLabel->
+  "During evaluation of \
+In[25]:=",ExpressionUUID->"cffbe58c-1579-4976-a8f9-7704edcb3a74"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"320.`", ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"ftfri", "\[Rule]", "0.35671929386553985`"}], ",", 
+     RowBox[{"ftmon", "\[Rule]", "0.2304936809776646`"}], ",", 
+     RowBox[{"ftsat", "\[Rule]", "0.20788063307179144`"}], ",", 
+     RowBox[{"ftsun", "\[Rule]", "0.3368678557549037`"}], ",", 
+     RowBox[{"ftthu", "\[Rule]", "0.13407699819213298`"}], ",", 
+     RowBox[{"fttue", "\[Rule]", "0.20866693179504203`"}], ",", 
+     RowBox[{"ftwed", "\[Rule]", "0.0034956511885642604`"}], ",", 
+     RowBox[{"ptfri", "\[Rule]", "1.0528246374689338`"}], ",", 
+     RowBox[{"ptmon", "\[Rule]", "0.0010133455408446546`"}], ",", 
+     RowBox[{"ptsat", "\[Rule]", "0.007640003032910989`"}], ",", 
+     RowBox[{"ptsun", "\[Rule]", "0.38776037126339347`"}], ",", 
+     RowBox[{"ptthu", "\[Rule]", "0.004274084799746374`"}], ",", 
+     RowBox[{"pttue", "\[Rule]", "0.0068729383854575785`"}], ",", 
+     RowBox[{"ptwed", "\[Rule]", "0.6520951668809278`"}]}], "}"}]}], 
+  "}"}]], "Output",
+ CellChangeTimes->{
+  3.7596898579045143`*^9, 3.759689921564557*^9, 3.7599671584327383`*^9, {
+   3.7601003733428297`*^9, 3.760100398570874*^9}, 3.76010044197323*^9},
+ CellLabel->"Out[30]=",ExpressionUUID->"135f677d-f769-4883-ae9d-eacb99fcea53"]
+}, Open  ]]
+},
+WindowSize->{808, 583},
+WindowMargins->{{90, Automatic}, {51, Automatic}},
+FrontEndVersion->"11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 5, \
+2018)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 6978, 164, 577, "Input",ExpressionUUID->"c3ea8853-65de-45fe-a7ed-e8623f7caab0"],
+Cell[7561, 188, 3058, 46, 143, "Message",ExpressionUUID->"c0ded4d2-68aa-408d-8451-36456085155c"],
+Cell[10622, 236, 1558, 26, 76, "Message",ExpressionUUID->"cffbe58c-1579-4976-a8f9-7704edcb3a74"],
+Cell[12183, 264, 1268, 23, 77, "Output",ExpressionUUID->"135f677d-f769-4883-ae9d-eacb99fcea53"]
+}, Open  ]]
+}
+]
+*)
+

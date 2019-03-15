@@ -1,0 +1,1754 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 11.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     64862,       1746]
+NotebookOptionsPosition[     62956,       1682]
+NotebookOutlinePosition[     63385,       1700]
+CellTagsIndexPosition[     63342,       1697]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Visual Optimization in two dimensions", "Subtitle",
+ Editable->False,
+ CellFrame->True,
+ CellChangeTimes->{{3.439037340363306*^9, 3.4390373577292356`*^9}},
+ TextAlignment->Center,
+ Background->RGBColor[
+  0.7529411764705882, 0.7529411764705882, 0.7529411764705882]],
+
+Cell[BoxData[Cell["Written by Adam B. Levy, Semptember 2011", "Text",
+  CellChangeTimes->{{3.448786410359375*^9, 3.448786429390625*^9}}]], "Text",
+ Editable->False,
+ CellChangeTimes->{{3.448786618078125*^9, 3.448786619484375*^9}, {
+  3.525185729468774*^9, 3.525185734499774*^9}}]
+}, Closed]],
+
+Cell[TextData[{
+ StyleBox["This notebook gives a template for visually observing the progress \
+of different numerical methods for optimizing a function f(x,y) of \
+two-variables, possibly subject to a constraint g(x,y)",
+  FontSize->16],
+ "\[GreaterEqual]",
+ StyleBox["0.",
+  FontSize->16]
+}], "Text",
+ Editable->False,
+ CellChangeTimes->{{3.438710920426714*^9, 3.4387109790375896`*^9}, {
+   3.4390343856553583`*^9, 3.4390344058388395`*^9}, {3.4390346596727757`*^9, 
+   3.439034688814209*^9}, {3.439036171417286*^9, 3.4390361723083897`*^9}, {
+   3.439036279725481*^9, 3.4390363025502453`*^9}, {3.4390373075227847`*^9, 
+   3.4390373245917273`*^9}, {3.4390373680612607`*^9, 
+   3.4390373718126764`*^9}, {3.439039739768152*^9, 3.439039748565196*^9}, {
+   3.4487033012737103`*^9, 3.4487033037193937`*^9}, {3.4506880560637503`*^9, 
+   3.4506880774856253`*^9}, 3.527266125046875*^9, {3.5274377102263007`*^9, 
+   3.5274377186971006`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Initializing the Guess and Objective",
+ Editable->True]], "Section",
+ Editable->False,
+ InitializationCell->True,
+ CellChangeTimes->{{3.4387111600265975`*^9, 3.438711160245353*^9}, {
+   3.4410327911099844`*^9, 3.441032806249156*^9}, {3.448369573625*^9, 
+   3.44836957584375*^9}, {3.44836976534375*^9, 3.448369783078125*^9}, 
+   3.695234639120804*^9},
+ TextAlignment->Center,
+ FontColor->RGBColor[0, 0, 1]],
+
+Cell[BoxData[{
+ RowBox[{"Off", "[", 
+  RowBox[{"General", "::", "spell"}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Off", "[", 
+  RowBox[{"General", "::", "spell1"}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Off", "[", 
+  RowBox[{"NMinimize", "::", "incst"}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Clear", "[", "f", "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"nb", "=", 
+   RowBox[{"SelectedNotebook", "[", " ", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"inx", "=", ".4"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"iny", "=", ".7"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"fi", "=", 
+   StyleBox[
+    RowBox[{
+     RowBox[{"x", "^", "3"}], "-", 
+     RowBox[{"x", " ", 
+      RowBox[{"y", "^", "2"}]}], "+", 
+     RowBox[{"y", "^", "3"}], "-", "y", "+", "1"}],
+    FontColor->GrayLevel[0]]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"gi", "=", "0"}], ";"}], "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{
+   "The", " ", "next", " ", "commands", " ", "build", " ", "partial", " ", 
+    "derivatives", " ", "that", " ", "can", " ", "be", " ", "used", " ", "in",
+     " ", "the", " ", "iteration", " ", "function", " ", 
+    RowBox[{"(", 
+     RowBox[{"and", " ", "an", " ", "exact", " ", "line", " ", "search"}], 
+     ")"}], " ", "while", " ", "accepting", " ", "current", " ", "guesses", 
+    " ", "in", " ", "the", " ", "argument", " ", "later"}], 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"fy", "[", 
+    RowBox[{"x_", ",", "y_"}], "]"}], "=", 
+   RowBox[{"D", "[", 
+    RowBox[{
+     RowBox[{"f", "[", 
+      RowBox[{"x", ",", "y"}], "]"}], ",", "y"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"fx", "[", 
+    RowBox[{"x_", ",", "y_"}], "]"}], "=", 
+   RowBox[{"D", "[", 
+    RowBox[{
+     RowBox[{"f", "[", 
+      RowBox[{"x", ",", "y"}], "]"}], ",", "x"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"fxx", "[", 
+    RowBox[{"x_", ",", "y_"}], "]"}], "=", 
+   RowBox[{"D", "[", 
+    RowBox[{
+     RowBox[{"fx", "[", 
+      RowBox[{"x", ",", "y"}], "]"}], ",", "x"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"fxy", "[", 
+    RowBox[{"x_", ",", "y_"}], "]"}], "=", 
+   RowBox[{"D", "[", 
+    RowBox[{
+     RowBox[{"fx", "[", 
+      RowBox[{"x", ",", "y"}], "]"}], ",", "y"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"fyx", "[", 
+    RowBox[{"x_", ",", "y_"}], "]"}], "=", 
+   RowBox[{"D", "[", 
+    RowBox[{
+     RowBox[{"fy", "[", 
+      RowBox[{"x", ",", "y"}], "]"}], ",", "x"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"fyy", "[", 
+    RowBox[{"x_", ",", "y_"}], "]"}], "=", 
+   RowBox[{"D", "[", 
+    RowBox[{
+     RowBox[{"fy", "[", 
+      RowBox[{"x", ",", "y"}], "]"}], ",", "y"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"PasteButton", "[", 
+   RowBox[{"Defer", "[", 
+    RowBox[{"fx", "[", 
+     RowBox[{"x", ",", "y"}], "]"}], "]"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"PasteButton", "[", 
+   RowBox[{"Defer", "[", 
+    RowBox[{"fy", "[", 
+     RowBox[{"x", ",", "y"}], "]"}], "]"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"PasteButton", "[", 
+   RowBox[{"Defer", "[", 
+    RowBox[{"fxx", "[", 
+     RowBox[{"x", ",", "y"}], "]"}], "]"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"PasteButton", "[", 
+   RowBox[{"Defer", "[", 
+    RowBox[{"fxy", "[", 
+     RowBox[{"x", ",", "y"}], "]"}], "]"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"PasteButton", "[", 
+   RowBox[{"Defer", "[", 
+    RowBox[{"fyx", "[", 
+     RowBox[{"x", ",", "y"}], "]"}], "]"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"PasteButton", "[", 
+    RowBox[{"Defer", "[", 
+     RowBox[{"fyy", "[", 
+      RowBox[{"x", ",", "y"}], "]"}], "]"}], "]"}], ";"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{
+   "The", " ", "next", " ", "command", " ", "finds", " ", "the", " ", "exact",
+     " ", "line", " ", "search", " ", "step", " ", "of", " ", "f", " ", 
+    "from", " ", 
+    RowBox[{"{", 
+     RowBox[{"xo", ",", "yo"}], "}"}], " ", "in", " ", "the", " ", 
+    "direction", " ", 
+    RowBox[{"{", 
+     RowBox[{"d1", ",", "d2"}], "}"}]}], "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"ExactStep", "[", 
+   RowBox[{"xo_", ",", "yo_", ",", 
+    RowBox[{"{", 
+     RowBox[{"d1_", ",", "d2_"}], "}"}]}], "]"}], ":=", 
+  RowBox[{"Module", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"a", ",", "x", ",", "y", ",", "min"}], "}"}], ",", 
+    StyleBox[
+     RowBox[{
+      RowBox[{"min", "=", 
+       RowBox[{"NMinimize", "[", 
+        RowBox[{
+         RowBox[{"f", "[", 
+          RowBox[{
+           RowBox[{"xo", "+", 
+            RowBox[{"a", " ", "d1"}]}], ",", 
+           RowBox[{"yo", "+", 
+            RowBox[{"a", " ", "d2"}]}]}], "]"}], ",", "a"}], "]"}]}], ";", 
+      RowBox[{"a", "/.", 
+       RowBox[{"min", "[", 
+        RowBox[{"[", "2", "]"}], "]"}]}]}],
+     FontColor->GrayLevel[0]]}], "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{
+   "The", " ", "next", " ", "command", " ", "finds", " ", "the", " ", 
+    "solution", " ", "to", " ", "the", " ", "SQP", " ", "quadratic", " ", 
+    "program", " ", "with", " ", "multiplier", " ", "lam", " ", "at", " ", 
+    RowBox[{"(", 
+     RowBox[{"xo", ",", "yo"}], ")"}]}], "*)"}], 
+  RowBox[{
+   RowBox[{"QP", "[", 
+    RowBox[{"xo_", ",", "yo_", ",", "lam_"}], "]"}], ":=", 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"L", ",", "TQ", ",", "x", ",", "y", ",", "min"}], "}"}], ",", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"L", "[", 
+        RowBox[{"x_", ",", "y_"}], "]"}], ":=", 
+       RowBox[{
+        RowBox[{"f", "[", 
+         RowBox[{"x", ",", "y"}], "]"}], "-", 
+        RowBox[{"lam", " ", 
+         RowBox[{"g", "[", 
+          RowBox[{"x", ",", "y"}], "]"}]}]}]}], ";", 
+      RowBox[{
+       RowBox[{"TQ", "[", 
+        RowBox[{"x_", ",", "y_"}], "]"}], "=", 
+       RowBox[{
+        RowBox[{"L", "[", 
+         RowBox[{"xo", ",", "yo"}], "]"}], "+", 
+        RowBox[{
+         RowBox[{
+          SuperscriptBox["L", 
+           TagBox[
+            RowBox[{"(", 
+             RowBox[{"1", ",", "0"}], ")"}],
+            Derivative],
+           MultilineFunction->None], "[", 
+          RowBox[{"xo", ",", "yo"}], "]"}], 
+         RowBox[{"(", 
+          RowBox[{"x", "-", "xo"}], ")"}]}], "+", 
+        RowBox[{
+         RowBox[{
+          SuperscriptBox["L", 
+           TagBox[
+            RowBox[{"(", 
+             RowBox[{"0", ",", "1"}], ")"}],
+            Derivative],
+           MultilineFunction->None], "[", 
+          RowBox[{"xo", ",", "yo"}], "]"}], 
+         RowBox[{"(", 
+          RowBox[{"y", "-", "yo"}], ")"}]}], "+", 
+        RowBox[{
+         RowBox[{"1", "/", "2"}], 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"x", "-", "xo"}], ",", 
+            RowBox[{"y", "-", "yo"}]}], "}"}], ".", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{
+               SuperscriptBox["L", 
+                TagBox[
+                 RowBox[{"(", 
+                  RowBox[{"2", ",", "0"}], ")"}],
+                 Derivative],
+                MultilineFunction->None], "[", 
+               RowBox[{"xo", ",", "yo"}], "]"}], ",", 
+              RowBox[{
+               SuperscriptBox["L", 
+                TagBox[
+                 RowBox[{"(", 
+                  RowBox[{"1", ",", "1"}], ")"}],
+                 Derivative],
+                MultilineFunction->None], "[", 
+               RowBox[{"xo", ",", "yo"}], "]"}]}], "}"}], ",", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{
+               SuperscriptBox["L", 
+                TagBox[
+                 RowBox[{"(", 
+                  RowBox[{"1", ",", "1"}], ")"}],
+                 Derivative],
+                MultilineFunction->None], "[", 
+               RowBox[{"xo", ",", "yo"}], "]"}], ",", 
+              RowBox[{
+               SuperscriptBox["L", 
+                TagBox[
+                 RowBox[{"(", 
+                  RowBox[{"0", ",", "2"}], ")"}],
+                 Derivative],
+                MultilineFunction->None], "[", 
+               RowBox[{"xo", ",", "yo"}], "]"}]}], "}"}]}], "}"}], ".", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"x", "-", "xo"}], ",", 
+            RowBox[{"y", "-", "yo"}]}], "}"}]}]}]}]}], 
+      StyleBox[";",
+       FontColor->GrayLevel[0]], 
+      RowBox[{
+       StyleBox["min",
+        FontColor->GrayLevel[0]], 
+       StyleBox["=",
+        FontColor->GrayLevel[0]], 
+       RowBox[{
+        StyleBox["Minimize",
+         FontColor->GrayLevel[0]], 
+        StyleBox["[",
+         FontColor->GrayLevel[0]], 
+        RowBox[{
+         RowBox[{
+          StyleBox["{",
+           FontColor->GrayLevel[0]], 
+          RowBox[{
+           RowBox[{"TQ", "[", 
+            RowBox[{"x", ",", "y"}], "]"}], ",", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"g", "[", 
+              RowBox[{"xo", ",", "yo"}], "]"}], "+", 
+             RowBox[{
+              RowBox[{
+               SuperscriptBox["g", 
+                TagBox[
+                 RowBox[{"(", 
+                  RowBox[{"1", ",", "0"}], ")"}],
+                 Derivative],
+                MultilineFunction->None], "[", 
+               RowBox[{"xo", ",", "yo"}], "]"}], 
+              RowBox[{"(", 
+               RowBox[{"x", "-", "xo"}], ")"}]}], "+", 
+             RowBox[{
+              RowBox[{
+               SuperscriptBox["g", 
+                TagBox[
+                 RowBox[{"(", 
+                  RowBox[{"0", ",", "1"}], ")"}],
+                 Derivative],
+                MultilineFunction->None], "[", 
+               RowBox[{"xo", ",", "yo"}], "]"}], 
+              RowBox[{"(", 
+               RowBox[{"y", "-", "yo"}], ")"}]}]}], "\[GreaterEqual]", 
+            "0"}]}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"x", ",", "y"}], "}"}]}], 
+        StyleBox["]",
+         FontColor->GrayLevel[0]]}]}], 
+      StyleBox[";",
+       FontColor->GrayLevel[0]], 
+      StyleBox[
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"Replace", "[", 
+          RowBox[{"x", ",", 
+           RowBox[{"min", "[", 
+            RowBox[{"[", "2", "]"}], "]"}]}], "]"}], ",", 
+         RowBox[{"Replace", "[", 
+          RowBox[{"y", ",", 
+           RowBox[{"min", "[", 
+            RowBox[{"[", "2", "]"}], "]"}]}], "]"}]}], "}"}],
+       FontColor->GrayLevel[0]]}]}], "]"}]}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{
+   "The", " ", "next", " ", "command", " ", "returns", " ", "the", " ", "new",
+     " ", "multiplier", " ", "from", " ", "the", " ", "old", " ", "lam", " ", 
+    "associated", " ", "with", " ", "the", " ", "old", " ", "guess", " ", 
+    RowBox[{"(", 
+     RowBox[{"xo", ",", "yo"}], ")"}]}], "*)"}], 
+  RowBox[{
+   RowBox[{"QPlambda", "[", "lam_", "]"}], ":=", 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"L", ",", "x", ",", "y"}], "}"}], ",", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"L", "[", 
+        RowBox[{"x_", ",", "y_"}], "]"}], ":=", 
+       RowBox[{
+        RowBox[{"f", "[", 
+         RowBox[{"x", ",", "y"}], "]"}], "-", 
+        RowBox[{"lam", " ", 
+         RowBox[{"g", "[", 
+          RowBox[{"x", ",", "y"}], "]"}]}]}]}], ";", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"Chop", "[", 
+          RowBox[{
+           RowBox[{"g", "[", 
+            RowBox[{
+             RowBox[{"guess", "[", 
+              RowBox[{"[", 
+               RowBox[{
+                RowBox[{"-", "2"}], ",", "1"}], "]"}], "]"}], ",", 
+             RowBox[{"guess", "[", 
+              RowBox[{"[", 
+               RowBox[{
+                RowBox[{"-", "2"}], ",", "2"}], "]"}], "]"}]}], "]"}], "+", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{
+               SuperscriptBox["g", 
+                TagBox[
+                 RowBox[{"(", 
+                  RowBox[{"1", ",", "0"}], ")"}],
+                 Derivative],
+                MultilineFunction->None], "[", 
+               RowBox[{
+                RowBox[{"guess", "[", 
+                 RowBox[{"[", 
+                  RowBox[{
+                   RowBox[{"-", "2"}], ",", "1"}], "]"}], "]"}], ",", 
+                RowBox[{"guess", "[", 
+                 RowBox[{"[", 
+                  RowBox[{
+                   RowBox[{"-", "2"}], ",", "2"}], "]"}], "]"}]}], "]"}], ",", 
+              RowBox[{
+               SuperscriptBox["g", 
+                TagBox[
+                 RowBox[{"(", 
+                  RowBox[{"0", ",", "1"}], ")"}],
+                 Derivative],
+                MultilineFunction->None], "[", 
+               RowBox[{
+                RowBox[{"guess", "[", 
+                 RowBox[{"[", 
+                  RowBox[{
+                   RowBox[{"-", "2"}], ",", "1"}], "]"}], "]"}], ",", 
+                RowBox[{"guess", "[", 
+                 RowBox[{"[", 
+                  RowBox[{
+                   RowBox[{"-", "2"}], ",", "2"}], "]"}], "]"}]}], "]"}]}], 
+             "}"}], ".", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{
+               RowBox[{"guess", "[", 
+                RowBox[{"[", 
+                 RowBox[{
+                  RowBox[{"-", "1"}], ",", "1"}], "]"}], "]"}], "-", 
+               RowBox[{"guess", "[", 
+                RowBox[{"[", 
+                 RowBox[{
+                  RowBox[{"-", "2"}], ",", "1"}], "]"}], "]"}]}], ",", 
+              RowBox[{
+               RowBox[{"guess", "[", 
+                RowBox[{"[", 
+                 RowBox[{
+                  RowBox[{"-", "1"}], ",", "2"}], "]"}], "]"}], "-", 
+               RowBox[{"guess", "[", 
+                RowBox[{"[", 
+                 RowBox[{
+                  RowBox[{"-", "2"}], ",", "2"}], "]"}], "]"}]}]}], "}"}]}]}],
+           "]"}], "\[Equal]", "0"}], " ", ",", 
+        RowBox[{"If", "[", " ", 
+         RowBox[{
+          RowBox[{
+           RowBox[{
+            SuperscriptBox["g", 
+             TagBox[
+              RowBox[{"(", 
+               RowBox[{"0", ",", "1"}], ")"}],
+              Derivative],
+             MultilineFunction->None], "[", 
+            RowBox[{
+             RowBox[{"guess", "[", 
+              RowBox[{"[", 
+               RowBox[{
+                RowBox[{"-", "2"}], ",", "1"}], "]"}], "]"}], ",", 
+             RowBox[{"guess", "[", 
+              RowBox[{"[", 
+               RowBox[{
+                RowBox[{"-", "2"}], ",", "2"}], "]"}], "]"}]}], "]"}], 
+           "\[NotEqual]", "0"}], ",", 
+          RowBox[{
+           RowBox[{"(", 
+            RowBox[{
+             RowBox[{
+              SuperscriptBox["L", 
+               TagBox[
+                RowBox[{"(", 
+                 RowBox[{"0", ",", "1"}], ")"}],
+                Derivative],
+               MultilineFunction->None], "[", 
+              RowBox[{
+               RowBox[{"guess", "[", 
+                RowBox[{"[", 
+                 RowBox[{
+                  RowBox[{"-", "2"}], ",", "1"}], "]"}], "]"}], ",", 
+               RowBox[{"guess", "[", 
+                RowBox[{"[", 
+                 RowBox[{
+                  RowBox[{"-", "2"}], ",", "2"}], "]"}], "]"}]}], "]"}], "+", 
+             RowBox[{
+              RowBox[{"(", 
+               RowBox[{
+                RowBox[{"guess", "[", 
+                 RowBox[{"[", 
+                  RowBox[{
+                   RowBox[{"-", "1"}], ",", "2"}], "]"}], "]"}], "-", 
+                RowBox[{"guess", "[", 
+                 RowBox[{"[", 
+                  RowBox[{
+                   RowBox[{"-", "2"}], ",", "2"}], "]"}], "]"}]}], ")"}], " ", 
+              RowBox[{
+               SuperscriptBox["L", 
+                TagBox[
+                 RowBox[{"(", 
+                  RowBox[{"0", ",", "2"}], ")"}],
+                 Derivative],
+                MultilineFunction->None], "[", 
+               RowBox[{
+                RowBox[{"guess", "[", 
+                 RowBox[{"[", 
+                  RowBox[{
+                   RowBox[{"-", "2"}], ",", "1"}], "]"}], "]"}], ",", 
+                RowBox[{"guess", "[", 
+                 RowBox[{"[", 
+                  RowBox[{
+                   RowBox[{"-", "2"}], ",", "2"}], "]"}], "]"}]}], "]"}]}], 
+             "+", 
+             RowBox[{
+              RowBox[{"(", 
+               RowBox[{
+                RowBox[{"guess", "[", 
+                 RowBox[{"[", 
+                  RowBox[{
+                   RowBox[{"-", "1"}], ",", "1"}], "]"}], "]"}], "-", 
+                RowBox[{"guess", "[", 
+                 RowBox[{"[", 
+                  RowBox[{
+                   RowBox[{"-", "2"}], ",", "1"}], "]"}], "]"}]}], ")"}], " ", 
+              RowBox[{
+               SuperscriptBox["L", 
+                TagBox[
+                 RowBox[{"(", 
+                  RowBox[{"1", ",", "1"}], ")"}],
+                 Derivative],
+                MultilineFunction->None], "[", 
+               RowBox[{
+                RowBox[{"guess", "[", 
+                 RowBox[{"[", 
+                  RowBox[{
+                   RowBox[{"-", "2"}], ",", "1"}], "]"}], "]"}], ",", 
+                RowBox[{"guess", "[", 
+                 RowBox[{"[", 
+                  RowBox[{
+                   RowBox[{"-", "2"}], ",", "2"}], "]"}], "]"}]}], "]"}]}]}], 
+            ")"}], "/", 
+           RowBox[{"(", 
+            RowBox[{
+             SuperscriptBox["g", 
+              TagBox[
+               RowBox[{"(", 
+                RowBox[{"0", ",", "1"}], ")"}],
+               Derivative],
+              MultilineFunction->None], "[", 
+             RowBox[{
+              RowBox[{"guess", "[", 
+               RowBox[{"[", 
+                RowBox[{
+                 RowBox[{"-", "2"}], ",", "1"}], "]"}], "]"}], ",", 
+              RowBox[{"guess", "[", 
+               RowBox[{"[", 
+                RowBox[{
+                 RowBox[{"-", "2"}], ",", "2"}], "]"}], "]"}]}], "]"}], 
+            ")"}]}], ",", 
+          RowBox[{"If", "[", " ", 
+           RowBox[{
+            RowBox[{
+             RowBox[{
+              SuperscriptBox["g", 
+               TagBox[
+                RowBox[{"(", 
+                 RowBox[{"1", ",", "0"}], ")"}],
+                Derivative],
+               MultilineFunction->None], "[", 
+              RowBox[{
+               RowBox[{"guess", "[", 
+                RowBox[{"[", 
+                 RowBox[{
+                  RowBox[{"-", "2"}], ",", "1"}], "]"}], "]"}], ",", 
+               RowBox[{"guess", "[", 
+                RowBox[{"[", 
+                 RowBox[{
+                  RowBox[{"-", "2"}], ",", "2"}], "]"}], "]"}]}], "]"}], 
+             "\[NotEqual]", "0"}], ",", 
+            RowBox[{
+             RowBox[{"(", 
+              RowBox[{
+               RowBox[{
+                SuperscriptBox["L", 
+                 TagBox[
+                  RowBox[{"(", 
+                   RowBox[{"1", ",", "0"}], ")"}],
+                  Derivative],
+                 MultilineFunction->None], "[", 
+                RowBox[{
+                 RowBox[{"guess", "[", 
+                  RowBox[{"[", 
+                   RowBox[{
+                    RowBox[{"-", "2"}], ",", "1"}], "]"}], "]"}], ",", 
+                 RowBox[{"guess", "[", 
+                  RowBox[{"[", 
+                   RowBox[{
+                    RowBox[{"-", "2"}], ",", "2"}], "]"}], "]"}]}], "]"}], 
+               "+", 
+               RowBox[{
+                RowBox[{"(", 
+                 RowBox[{
+                  RowBox[{"guess", "[", 
+                   RowBox[{"[", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], ",", "1"}], "]"}], "]"}], "-", 
+                  RowBox[{"guess", "[", 
+                   RowBox[{"[", 
+                    RowBox[{
+                    RowBox[{"-", "2"}], ",", "1"}], "]"}], "]"}]}], ")"}], 
+                " ", 
+                RowBox[{
+                 SuperscriptBox["L", 
+                  TagBox[
+                   RowBox[{"(", 
+                    RowBox[{"2", ",", "0"}], ")"}],
+                   Derivative],
+                  MultilineFunction->None], "[", 
+                 RowBox[{
+                  RowBox[{"guess", "[", 
+                   RowBox[{"[", 
+                    RowBox[{
+                    RowBox[{"-", "2"}], ",", "1"}], "]"}], "]"}], ",", 
+                  RowBox[{"guess", "[", 
+                   RowBox[{"[", 
+                    RowBox[{
+                    RowBox[{"-", "2"}], ",", "2"}], "]"}], "]"}]}], "]"}]}], 
+               "+", 
+               RowBox[{
+                RowBox[{"(", 
+                 RowBox[{
+                  RowBox[{"guess", "[", 
+                   RowBox[{"[", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], ",", "2"}], "]"}], "]"}], "-", 
+                  RowBox[{"guess", "[", 
+                   RowBox[{"[", 
+                    RowBox[{
+                    RowBox[{"-", "2"}], ",", "2"}], "]"}], "]"}]}], ")"}], 
+                " ", 
+                RowBox[{
+                 SuperscriptBox["L", 
+                  TagBox[
+                   RowBox[{"(", 
+                    RowBox[{"1", ",", "1"}], ")"}],
+                   Derivative],
+                  MultilineFunction->None], "[", 
+                 RowBox[{
+                  RowBox[{"guess", "[", 
+                   RowBox[{"[", 
+                    RowBox[{
+                    RowBox[{"-", "2"}], ",", "1"}], "]"}], "]"}], ",", 
+                  RowBox[{"guess", "[", 
+                   RowBox[{"[", 
+                    RowBox[{
+                    RowBox[{"-", "2"}], ",", "2"}], "]"}], "]"}]}], "]"}]}]}],
+               ")"}], "/", 
+             RowBox[{"(", 
+              RowBox[{
+               SuperscriptBox["g", 
+                TagBox[
+                 RowBox[{"(", 
+                  RowBox[{"1", ",", "0"}], ")"}],
+                 Derivative],
+                MultilineFunction->None], "[", 
+               RowBox[{
+                RowBox[{"guess", "[", 
+                 RowBox[{"[", 
+                  RowBox[{
+                   RowBox[{"-", "2"}], ",", "1"}], "]"}], "]"}], ",", 
+                RowBox[{"guess", "[", 
+                 RowBox[{"[", 
+                  RowBox[{
+                   RowBox[{"-", "2"}], ",", "2"}], "]"}], "]"}]}], "]"}], 
+              ")"}]}], ",", "0"}], "]"}]}], "]"}], ",", "0"}], "]"}]}]}], 
+    "]"}]}], "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{
+   "The", " ", "next", " ", "command", " ", "iterates", " ", "the", " ", 
+    "iteration", " ", "function", " ", "once", " ", "and", " ", "updates", 
+    " ", "the", " ", "list", " ", "of", " ", "guesses"}], 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"IterateOpt", "[", 
+    RowBox[{"{", 
+     RowBox[{"xo_", ",", "yo_"}], "}"}], "]"}], ":=", 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"xn", ",", "yn"}], "}"}], ",", 
+     StyleBox[
+      RowBox[{
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"xn", ",", "yn"}], "}"}], "=", 
+        RowBox[{"Evaluate", "[", 
+         RowBox[{"G", "[", 
+          RowBox[{"xo", ",", "yo"}], "]"}], "]"}]}], ";", 
+       RowBox[{"guess", "=", 
+        RowBox[{"AppendTo", "[", 
+         RowBox[{"guess", ",", 
+          RowBox[{"N", "[", 
+           RowBox[{"{", 
+            RowBox[{"xn", ",", "yn"}], "}"}], "]"}]}], "]"}]}], ";"}],
+      FontColor->GrayLevel[0]]}], "]"}]}], "\n", 
+  RowBox[{"(*", 
+   RowBox[{
+   "The", " ", "next", " ", "command", " ", "draws", " ", "the", " ", 
+    "contour", " ", "plot", " ", "of", " ", "the", " ", "objective", " ", 
+    "with", " ", "the", " ", "guesslist", " ", "and", " ", "constraint", " ", 
+    RowBox[{"curve", "--"}], "if", " ", "there", " ", "is", " ", 
+    RowBox[{"one", "--"}], "overlayed"}], "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"VisualOpt", "[", "list_", "]"}], ":=", 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"xmax", ",", "xmin", ",", "ymax", ",", "ymin"}], "}"}], ",", 
+     RowBox[{
+      RowBox[{"xmax", "=", 
+       RowBox[{"Max", "[", 
+        RowBox[{"list", "[", 
+         RowBox[{"[", 
+          RowBox[{"All", ",", "1"}], "]"}], "]"}], "]"}]}], ";", 
+      RowBox[{"xmin", "=", 
+       RowBox[{"Min", "[", 
+        RowBox[{"list", "[", 
+         RowBox[{"[", 
+          RowBox[{"All", ",", "1"}], "]"}], "]"}], "]"}]}], ";", 
+      RowBox[{"ymax", "=", 
+       RowBox[{"Max", "[", 
+        RowBox[{"list", "[", 
+         RowBox[{"[", 
+          RowBox[{"All", ",", "2"}], "]"}], "]"}], "]"}]}], ";", 
+      RowBox[{"ymin", "=", 
+       RowBox[{"Min", "[", 
+        RowBox[{"list", "[", 
+         RowBox[{"[", 
+          RowBox[{"All", ",", "2"}], "]"}], "]"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"Grid", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"Grid", "[", 
+            RowBox[{
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"{", "\"\<newest 20 guesses\>\"", "}"}], ",", 
+               RowBox[{"{", 
+                RowBox[{"If", "[", 
+                 RowBox[{
+                  RowBox[{
+                   RowBox[{"Length", "[", "list", "]"}], "\[LessEqual]", 
+                   "19"}], ",", 
+                  RowBox[{"TableForm", "[", "list", "]"}], ",", 
+                  RowBox[{"TableForm", "[", 
+                   RowBox[{"Take", "[", 
+                    RowBox[{"list", ",", 
+                    RowBox[{"-", "20"}]}], "]"}], "]"}]}], "]"}], "}"}]}], 
+              "}"}], ",", 
+             RowBox[{"Alignment", "\[Rule]", 
+              RowBox[{"{", 
+               RowBox[{"Center", ",", "Center"}], "}"}]}]}], "]"}], ",", 
+           RowBox[{"Show", "[", 
+            RowBox[{
+             RowBox[{"ContourPlot", "[", 
+              RowBox[{"fi", ",", 
+               RowBox[{"{", 
+                RowBox[{"x", ",", 
+                 RowBox[{"xmin", "-", 
+                  RowBox[{
+                   RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"xmax", "\[Equal]", "xmin"}], ",", "1", ",", 
+                    RowBox[{"(", 
+                    RowBox[{"xmax", "-", "xmin"}], ")"}]}], "]"}], "/", 
+                   "10"}]}], ",", 
+                 RowBox[{"xmax", "+", 
+                  RowBox[{
+                   RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"xmax", "\[Equal]", "xmin"}], ",", "1", ",", 
+                    RowBox[{"(", 
+                    RowBox[{"xmax", "-", "xmin"}], ")"}]}], "]"}], "/", 
+                   "10"}]}]}], "}"}], ",", 
+               RowBox[{"{", 
+                RowBox[{"y", ",", 
+                 RowBox[{"ymin", "-", 
+                  RowBox[{
+                   RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"ymax", "\[Equal]", "ymin"}], ",", "1", ",", 
+                    RowBox[{"(", 
+                    RowBox[{"ymax", "-", "ymin"}], ")"}]}], "]"}], "/", 
+                   "10"}]}], ",", 
+                 RowBox[{"ymax", "+", 
+                  RowBox[{
+                   RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"ymax", "\[Equal]", "ymin"}], ",", "1", ",", 
+                    RowBox[{"(", 
+                    RowBox[{"ymax", "-", "ymin"}], ")"}]}], "]"}], "/", 
+                   "10"}]}]}], "}"}], ",", 
+               RowBox[{"Contours", "\[Rule]", "20"}], ",", 
+               RowBox[{"PlotPoints", "\[Rule]", "25"}]}], "]"}], ",", 
+             RowBox[{"Graphics", "[", 
+              RowBox[{"{", 
+               RowBox[{"Blue", ",", 
+                RowBox[{"Line", "[", "list", "]"}]}], "}"}], "]"}], ",", 
+             "\[IndentingNewLine]", 
+             RowBox[{"Graphics", "[", 
+              RowBox[{"{", 
+               RowBox[{"Blue", ",", 
+                RowBox[{"PointSize", "[", "Medium", "]"}], ",", 
+                RowBox[{"Point", "[", "list", "]"}]}], "}"}], "]"}], ",", 
+             RowBox[{"Graphics", "[", 
+              RowBox[{"{", 
+               RowBox[{"Blue", ",", 
+                RowBox[{"PointSize", "[", "Large", "]"}], ",", 
+                RowBox[{"Point", "[", 
+                 RowBox[{"First", "[", "list", "]"}], "]"}]}], "}"}], "]"}], 
+             ",", 
+             RowBox[{"Graphics", "[", 
+              RowBox[{"{", 
+               RowBox[{"Red", ",", 
+                RowBox[{"PointSize", "[", "Large", "]"}], ",", 
+                RowBox[{"Point", "[", 
+                 RowBox[{"Last", "[", "list", "]"}], "]"}]}], "}"}], "]"}], 
+             ",", 
+             RowBox[{"RegionPlot", "[", 
+              RowBox[{
+               RowBox[{"gi", "<", "0"}], ",", 
+               RowBox[{"{", 
+                RowBox[{"x", ",", 
+                 RowBox[{"xmin", "-", 
+                  RowBox[{
+                   RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"xmax", "\[Equal]", "xmin"}], ",", "1", ",", 
+                    RowBox[{"(", 
+                    RowBox[{"xmax", "-", "xmin"}], ")"}]}], "]"}], "/", 
+                   "10"}]}], ",", 
+                 RowBox[{"xmax", "+", 
+                  RowBox[{
+                   RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"xmax", "\[Equal]", "xmin"}], ",", "1", ",", 
+                    RowBox[{"(", 
+                    RowBox[{"xmax", "-", "xmin"}], ")"}]}], "]"}], "/", 
+                   "10"}]}]}], "}"}], ",", 
+               RowBox[{"{", 
+                RowBox[{"y", ",", 
+                 RowBox[{"ymin", "-", 
+                  RowBox[{
+                   RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"ymax", "\[Equal]", "ymin"}], ",", "1", ",", 
+                    RowBox[{"(", 
+                    RowBox[{"ymax", "-", "ymin"}], ")"}]}], "]"}], "/", 
+                   "10"}]}], ",", 
+                 RowBox[{"ymax", "+", 
+                  RowBox[{
+                   RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"ymax", "\[Equal]", "ymin"}], ",", "1", ",", 
+                    RowBox[{"(", 
+                    RowBox[{"ymax", "-", "ymin"}], ")"}]}], "]"}], "/", 
+                   "10"}]}]}], "}"}], ",", 
+               RowBox[{"PlotStyle", "\[Rule]", 
+                RowBox[{"Opacity", "[", ".3", "]"}]}]}], "]"}], ",", 
+             RowBox[{"ContourPlot", "[", 
+              RowBox[{"gi", ",", 
+               RowBox[{"{", 
+                RowBox[{"x", ",", 
+                 RowBox[{"xmin", "-", 
+                  RowBox[{
+                   RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"xmax", "\[Equal]", "xmin"}], ",", "1", ",", 
+                    RowBox[{"(", 
+                    RowBox[{"xmax", "-", "xmin"}], ")"}]}], "]"}], "/", 
+                   "10"}]}], ",", 
+                 RowBox[{"xmax", "+", 
+                  RowBox[{
+                   RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"xmax", "\[Equal]", "xmin"}], ",", "1", ",", 
+                    RowBox[{"(", 
+                    RowBox[{"xmax", "-", "xmin"}], ")"}]}], "]"}], "/", 
+                   "10"}]}]}], "}"}], ",", 
+               RowBox[{"{", 
+                RowBox[{"y", ",", 
+                 RowBox[{"ymin", "-", 
+                  RowBox[{
+                   RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"ymax", "\[Equal]", "ymin"}], ",", "1", ",", 
+                    RowBox[{"(", 
+                    RowBox[{"ymax", "-", "ymin"}], ")"}]}], "]"}], "/", 
+                   "10"}]}], ",", 
+                 RowBox[{"ymax", "+", 
+                  RowBox[{
+                   RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"ymax", "\[Equal]", "ymin"}], ",", "1", ",", 
+                    RowBox[{"(", 
+                    RowBox[{"ymax", "-", "ymin"}], ")"}]}], "]"}], "/", 
+                   "10"}]}]}], "}"}], ",", 
+               RowBox[{"Contours", "\[Rule]", 
+                RowBox[{"{", "0", "}"}]}], ",", 
+               RowBox[{"PlotPoints", "\[Rule]", "25"}], ",", 
+               RowBox[{"ContourShading", "\[Rule]", "False"}], ",", 
+               RowBox[{"ContourStyle", "\[Rule]", 
+                RowBox[{"{", 
+                 RowBox[{"Thick", ",", "Blue"}], "}"}]}]}], "]"}], ",", 
+             RowBox[{"Frame", "\[Rule]", "True"}], ",", 
+             RowBox[{"FrameLabel", "\[Rule]", 
+              RowBox[{"{", 
+               RowBox[{
+                RowBox[{"Style", "[", 
+                 RowBox[{
+                  RowBox[{"\"\<Newest guess is \>\"", 
+                   RowBox[{"Style", "[", 
+                    RowBox[{
+                    RowBox[{"Last", "[", "list", "]"}], ",", "Red"}], "]"}]}],
+                   ",", "Medium"}], "]"}], ",", ",", 
+                RowBox[{"Style", "[", 
+                 RowBox[{
+                  RowBox[{"\"\<First guess is \>\"", 
+                   RowBox[{"Style", "[", 
+                    RowBox[{
+                    RowBox[{"First", "[", "list", "]"}], ",", "Blue"}], 
+                    "]"}]}], ",", "Medium"}], "]"}]}], "}"}]}], ",", 
+             RowBox[{"ImageSize", "\[Rule]", "Medium"}]}], "]"}]}], "}"}], 
+         "}"}], ",", 
+        RowBox[{"ItemSize", "\[Rule]", 
+         RowBox[{"{", 
+          RowBox[{"{", 
+           RowBox[{"15", ",", "30"}], "}"}], "}"}]}], ",", 
+        RowBox[{"Alignment", "\[Rule]", 
+         RowBox[{"{", 
+          RowBox[{"Center", ",", "Top"}], "}"}]}], ",", 
+        RowBox[{"Frame", "\[Rule]", "All"}]}], "]"}]}]}], "]"}]}], 
+  "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{
+    "The", " ", "next", " ", "command", " ", "makes", " ", "a", " ", "pop"}], 
+    "-", 
+    RowBox[{
+    "up", " ", "box", " ", "to", " ", "intiialize", " ", "the", " ", 
+     "method"}]}], "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Initialize", ":=", 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", "}"}], ",", 
+     RowBox[{"DialogInput", "[", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"Grid", "[", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{"TextCell", "[", "\"\<First Guess\>\"", "]"}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"Grid", "[", 
+             RowBox[{"{", 
+              RowBox[{"{", 
+               RowBox[{
+                RowBox[{"TextCell", "[", "\"\<x =\>\"", "]"}], ",", 
+                RowBox[{"InputField", "[", 
+                 RowBox[{
+                  RowBox[{"Dynamic", "[", "inx", "]"}], ",", "Number", ",", 
+                  RowBox[{"ImageSize", "\[Rule]", "30"}]}], "]"}], ",", 
+                RowBox[{"TextCell", "[", "\"\<y =\>\"", "]"}], ",", 
+                RowBox[{"InputField", "[", 
+                 RowBox[{
+                  RowBox[{"Dynamic", "[", "iny", "]"}], ",", "Number", ",", 
+                  RowBox[{"ImageSize", "\[Rule]", "30"}]}], "]"}]}], "}"}], 
+              "}"}], "]"}], "}"}]}], "}"}], "]"}], ",", 
+        RowBox[{"Grid", "[", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{"TextCell", "[", "\"\<Objective function\>\"", "]"}], 
+            "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"TextCell", "[", "\"\<f[x,y]\>\"", "]"}], ",", 
+             RowBox[{"InputField", "[", 
+              RowBox[{"Dynamic", "[", "fi", "]"}], "]"}]}], "}"}]}], "}"}], 
+         "]"}], ",", 
+        RowBox[{"Grid", "[", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{"TextCell", "[", "\"\<Constraint function\>\"", "]"}], 
+            "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"TextCell", "[", "\"\<g[x,y]\>\"", "]"}], ",", 
+             RowBox[{"InputField", "[", 
+              RowBox[{"Dynamic", "[", "gi", "]"}], "]"}], ",", 
+             RowBox[{"TextCell", "[", "\"\<\[GreaterEqual] 0\>\"", "]"}]}], 
+            "}"}]}], "}"}], "]"}], ",", "\[IndentingNewLine]", 
+        RowBox[{"DefaultButton", "[", 
+         RowBox[{"\"\<Done\>\"", ",", 
+          RowBox[{"DialogReturn", "[", 
+           RowBox[{
+            RowBox[{"guess", "=", 
+             RowBox[{"{", 
+              RowBox[{"{", 
+               RowBox[{"inx", ",", "iny"}], "}"}], "}"}]}], ";", 
+            RowBox[{
+             RowBox[{"f", "[", 
+              RowBox[{"x_", ",", "y_"}], "]"}], "=", "fi"}], ";", 
+            RowBox[{
+             RowBox[{"g", "[", 
+              RowBox[{"x_", ",", "y_"}], "]"}], "=", "gi"}], ";"}], 
+           StyleBox["]",
+            FontSize->14]}]}], "]"}]}], "}"}], "]"}]}], "]"}]}], 
+  ";"}]}], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{{3.448354915969904*^9, 3.4483549213272552`*^9}, {
+   3.448355417920921*^9, 3.4483554595614414`*^9}, {3.448355497406521*^9, 
+   3.4483555152903905`*^9}, 3.448355561476069*^9, {3.44835571765145*^9, 
+   3.4483557198381243`*^9}, 3.4483561181720314`*^9, 3.4483564471883726`*^9, {
+   3.448356619404569*^9, 3.4483566418335967`*^9}, 3.4483576135602846`*^9, {
+   3.448366029537461*^9, 3.448366037237677*^9}, {3.4487028014798403`*^9, 
+   3.4487028100662003`*^9}, {3.448705324473918*^9, 3.44870532500493*^9}, {
+   3.4487067156941223`*^9, 3.44870672945358*^9}, {3.448706817320448*^9, 
+   3.4487068315015917`*^9}, {3.4487069106223803`*^9, 
+   3.4487069389378138`*^9}, {3.448706987088108*^9, 3.448706994475422*^9}, {
+   3.448707024743106*^9, 3.448707025555242*^9}, {3.448707069816654*^9, 
+   3.448707120387738*^9}, {3.448707294684618*^9, 3.448707353658186*^9}, {
+   3.4487077167298317`*^9, 3.448707765770352*^9}, {3.448707872488146*^9, 
+   3.448707874003092*^9}, {3.4487080695092163`*^9, 3.4487080740540543`*^9}, {
+   3.448708466128326*^9, 3.4487084672684402`*^9}, {3.448708571299938*^9, 
+   3.448708575876012*^9}, {3.4487087068641777`*^9, 3.44870870825418*^9}, {
+   3.4487855634375*^9, 3.448785586765625*^9}, {3.448785774015625*^9, 
+   3.448785778*^9}, {3.44878583228125*^9, 3.448786145609375*^9}, 
+   3.448870843328125*^9, {3.4488903050545855`*^9, 3.4488903274766045`*^9}, {
+   3.448890548196767*^9, 3.4488905937908087`*^9}, {3.448890675900709*^9, 
+   3.4488907386042356`*^9}, {3.4488909287773275`*^9, 
+   3.4488909959183826`*^9}, {3.4488917331731005`*^9, 3.448891786392191*^9}, {
+   3.4488950663350577`*^9, 3.448895113397859*^9}, {3.448895143569927*^9, 
+   3.4488951911014814`*^9}, {3.4488952554456434`*^9, 
+   3.4488952844302034`*^9}, {3.448895471712652*^9, 3.448895496525311*^9}, {
+   3.44889554321311*^9, 3.4488955777445807`*^9}, 3.448895638510595*^9, {
+   3.4488956968078427`*^9, 3.4488957962928543`*^9}, 3.4488958368243637`*^9, {
+   3.4488959630595465`*^9, 3.4488959730127354`*^9}, {3.4488960033098044`*^9, 
+   3.4488960996072955`*^9}, {3.4488963810153465`*^9, 3.448896401702979*^9}, {
+   3.4488964983285975`*^9, 3.4488965189537296`*^9}, {3.448905141953125*^9, 
+   3.448905142234375*^9}, {3.44895713140625*^9, 3.44895713515625*^9}, {
+   3.4506887281262503`*^9, 3.4506887496575003`*^9}, 3.527261559046875*^9, {
+   3.5272615891875*^9, 3.5272616306875*^9}, {3.527265841765625*^9, 
+   3.52726595453125*^9}, 3.5273327953496447`*^9, {3.527332880728445*^9, 
+   3.5273328920684447`*^9}, {3.527437431969101*^9, 3.5274374324995008`*^9}, {
+   3.527437470766301*^9, 3.527437490391101*^9}, {3.5302815723189015`*^9, 
+   3.5302815945769014`*^9}, {3.530281825550502*^9, 3.530281856452902*^9}, {
+   3.5302819391017017`*^9, 3.5302819567765017`*^9}, 3.571138457088786*^9, {
+   3.571235051671875*^9, 3.571235077265625*^9}, {3.572103851012774*^9, 
+   3.5721039153382063`*^9}, {3.5721039732579975`*^9, 3.572104012096881*^9}, 
+   3.572104051103781*^9, {3.5721746182867002`*^9, 3.5721746736742387`*^9}, {
+   3.5721750546913366`*^9, 3.5721750602338905`*^9}, {3.572178603209158*^9, 
+   3.5721786190177383`*^9}, {3.5721786732951655`*^9, 
+   3.5721786772995663`*^9}, {3.5942929330244837`*^9, 3.594292936915311*^9}, {
+   3.594292982698928*^9, 3.5942929872616644`*^9}, {3.5942930211071606`*^9, 
+   3.5942930434051857`*^9}, {3.5942930846729403`*^9, 3.594293112815023*^9}, {
+   3.594293150207576*^9, 3.594293189553359*^9}, {3.5942947900735064`*^9, 
+   3.5942947959175606`*^9}, 3.594294882640786*^9, {3.5942949435658092`*^9, 
+   3.5942949534881973`*^9}, {3.594295171327571*^9, 3.594295171811967*^9}, {
+   3.5942955888960085`*^9, 3.594295661305996*^9}, {3.5942964818796225`*^9, 
+   3.5942964835359526`*^9}, {3.594298614315544*^9, 3.594298619722077*^9}, {
+   3.5942987772145805`*^9, 3.594298778714675*^9}, {3.594298835967615*^9, 
+   3.5942988891266103`*^9}, {3.594299322930261*^9, 3.59429932599292*^9}, {
+   3.5942993903712444`*^9, 3.5942994983299446`*^9}, 3.594299534316177*^9, 
+   3.594299954587879*^9, 3.5943002148513193`*^9, {3.5944704302154408`*^9, 
+   3.594470434224641*^9}, {3.5944708404443984`*^9, 3.5944709980043983`*^9}, {
+   3.5944718772075987`*^9, 3.594471878907998*^9}, 3.696777907943946*^9, {
+   3.6967779722958097`*^9, 3.6967779780986004`*^9}, 3.7014483120388107`*^9, {
+   3.7015994579527493`*^9, 3.7015994583271503`*^9}}]
+}, Closed]],
+
+Cell["\<\
+To start the numerical method at a particular guess with a particular \
+objective function, click your cursor after the following \"Initialize\" \
+command, hit the ENTER button on your keyboard (not the carriage return \
+button), click \"Yes\" to the initialization question, fill in the \
+appropriate boxes that pop up, and click \"Done\".\
+\>", "Text",
+ Editable->False,
+ CellChangeTimes->{{3.441031823968464*^9, 3.4410318301084995`*^9}, {
+   3.4410321972919965`*^9, 3.4410322949544945`*^9}, {3.441032338622177*^9, 
+   3.4410323507616367`*^9}, 3.4410325875826497`*^9, {3.4410327267724113`*^9, 
+   3.4410327280847855`*^9}, 3.441032824330944*^9, {3.44836958759375*^9, 
+   3.448369645828125*^9}, {3.4483697920625*^9, 3.4483698755625*^9}, {
+   3.448370002984375*^9, 3.44837000325*^9}, 3.44870276364668*^9, {
+   3.4487059145375757`*^9, 3.448705917020838*^9}, {3.4506880204543753`*^9, 
+   3.4506880397356253`*^9}, {3.4506881204075003`*^9, 
+   3.4506881272825003`*^9}, {3.4506881642200003`*^9, 
+   3.4506881687512503`*^9}, {3.4506882124075003`*^9, 3.4506882857043753`*^9}},
+ FontSize->16],
+
+Cell[BoxData["Initialize"], "Input",
+ Editable->False,
+ CellChangeTimes->{{3.448707000519588*^9, 3.448707002518692*^9}, 
+   3.448707139941474*^9, {3.448708474749462*^9, 3.4487084758583403`*^9}},
+ TextAlignment->Center],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Building the Method",
+ Editable->True]], "Section",
+ CellChangeTimes->{{3.4387108886133995`*^9, 3.4387108926603785`*^9}, {
+  3.44836991946875*^9, 3.448369925984375*^9}},
+ TextAlignment->Center,
+ FontColor->RGBColor[0, 0, 1]],
+
+Cell[TextData[StyleBox["Iteration Mapping",
+ Editable->True]], "Subsection",
+ CellChangeTimes->{{3.695469891353796*^9, 3.695469892096796*^9}}],
+
+Cell[TextData[{
+ StyleBox["The numerical method is determined by an iteration mapping ",
+  FontSize->16],
+ StyleBox["G",
+  FontSize->16,
+  FontColor->GrayLevel[0]],
+ StyleBox["(x,y) giving the right side of the update formula for new guesses \
+in terms of old:",
+  FontSize->16]
+}], "Text",
+ CellChangeTimes->{{3.438710920426714*^9, 3.4387109790375896`*^9}, {
+   3.4390343856553583`*^9, 3.439034481087484*^9}, 3.439034513662015*^9, {
+   3.4390347055661707`*^9, 3.439034707025622*^9}, 3.4390347895956597`*^9, {
+   3.4390350909422226`*^9, 3.4390351386216965`*^9}, {3.439035213196412*^9, 
+   3.439035230298403*^9}, 3.439035274794959*^9, {3.439035407861001*^9, 
+   3.4390354912157516`*^9}, {3.4390355437526536`*^9, 
+   3.4390355778080654`*^9}, {3.4390357311731644`*^9, 
+   3.4390358036837845`*^9}, {3.4390361147298346`*^9, 3.439036148959449*^9}, 
+   3.4390381771556873`*^9, {3.439039795347344*^9, 3.439039802206851*^9}, 
+   3.4410319767037997`*^9, {3.44810234851188*^9, 3.44810234913728*^9}, {
+   3.4482912314454703`*^9, 3.448291236148746*^9}, {3.44829336023234*^9, 
+   3.4482933610448656`*^9}, {3.448293392624001*^9, 3.4482933931552677`*^9}, {
+   3.448293441297434*^9, 3.4482934579229655`*^9}, {3.448363368214631*^9, 
+   3.4483633711197834`*^9}, {3.4483638034252334`*^9, 3.448363849439102*^9}, {
+   3.448369966828125*^9, 3.44836998128125*^9}, {3.695469894545796*^9, 
+   3.695469896488796*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"[", GridBox[{
+     {
+      SubscriptBox["x", "new"]},
+     {
+      SubscriptBox["y", "new"]}
+    }], "]"}], " ", "=", " ", 
+  RowBox[{"G", 
+   RowBox[{"(", 
+    RowBox[{
+     SubscriptBox["x", "old"], ",", 
+     SubscriptBox["y", "old"]}], ")"}]}]}]], "Text",
+ CellChangeTimes->{{3.448363379304192*^9, 3.4483634396251564`*^9}},
+ TextAlignment->Center,
+ FontSize->18],
+
+Cell["\<\
+For example, simply assigning the old variables as new would involve the \
+iteration mapping\
+\>", "Text",
+ CellChangeTimes->{{3.438710920426714*^9, 3.4387109790375896`*^9}, {
+  3.4390343856553583`*^9, 3.4390344058388395`*^9}, {3.4390346596727757`*^9, 
+  3.439034688814209*^9}, {3.4390359687074237`*^9, 3.4390360723644404`*^9}, {
+  3.4483631081253777`*^9, 3.448363285464639*^9}, {3.4483636107636347`*^9, 
+  3.448363612997166*^9}, {3.4483637339670954`*^9, 3.448363738699683*^9}, {
+  3.4483638660109673`*^9, 3.448363872524132*^9}, {3.44870285794024*^9, 
+  3.44870285811228*^9}, {3.695469900440796*^9, 3.695469901152796*^9}},
+ FontSize->16],
+
+Cell[TextData[StyleBox["G(x,y)={x,y}",
+ FontSize->16]], "Text",
+ CellChangeTimes->{{3.4483638912670517`*^9, 3.448363904293381*^9}},
+ TextAlignment->Center,
+ FontSize->18],
+
+Cell[TextData[{
+ "since ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " represents column vectors ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"[", GridBox[{
+      {"x"},
+      {"y"}
+     }], "]"}], TraditionalForm]]],
+ " as lists {x,y}."
+}], "Text",
+ CellChangeTimes->{{3.438710920426714*^9, 3.4387109790375896`*^9}, {
+  3.4390343856553583`*^9, 3.4390344058388395`*^9}, {3.4390346596727757`*^9, 
+  3.439034688814209*^9}, {3.4390359687074237`*^9, 3.4390360723644404`*^9}, {
+  3.4483631081253777`*^9, 3.448363285464639*^9}, {3.4483636107636347`*^9, 
+  3.448363612997166*^9}, {3.4483637339670954`*^9, 3.448363738699683*^9}, {
+  3.4483638660109673`*^9, 3.448363872524132*^9}, {3.4483639567891765`*^9, 
+  3.44836401885948*^9}},
+ FontSize->16],
+
+Cell["\<\
+ENTER your iteration mapping after filling in the \[Placeholder] below using \
+the following pasting buttons\
+\>", "Text",
+ CellChangeTimes->{{3.4483642093656425`*^9, 3.4483642851807537`*^9}, {
+  3.4483695286875*^9, 3.448369529375*^9}, {3.44870271811864*^9, 
+  3.4487027608471203`*^9}, {3.448785695953125*^9, 3.448785733921875*^9}, {
+  3.695469956789796*^9, 3.6954699574937963`*^9}},
+ FontSize->16],
+
+Cell[BoxData[GridBox[{
+   {
+    ButtonBox[
+     RowBox[{"fx", "[", 
+      RowBox[{"x", ",", "y"}], "]"}],
+     BaseStyle->"Paste"], 
+    ButtonBox[
+     RowBox[{"fy", "[", 
+      RowBox[{"x", ",", "y"}], "]"}],
+     BaseStyle->"Paste"], 
+    ButtonBox[
+     RowBox[{"fxx", "[", 
+      RowBox[{"x", ",", "y"}], "]"}],
+     BaseStyle->"Paste"], 
+    ButtonBox[
+     RowBox[{"fxy", "[", 
+      RowBox[{"x", ",", "y"}], "]"}],
+     BaseStyle->"Paste"], 
+    ButtonBox[
+     RowBox[{"fyx", "[", 
+      RowBox[{"x", ",", "y"}], "]"}],
+     BaseStyle->"Paste"], 
+    ButtonBox[
+     RowBox[{"fyy", "[", 
+      RowBox[{"x", ",", "y"}], "]"}],
+     BaseStyle->"Paste"]}
+  },
+  GridBoxDividers->{
+   "Columns" -> {{True}}, "ColumnsIndexed" -> {}, "Rows" -> {{True}}, 
+    "RowsIndexed" -> {}}]], "Input",
+ CellChangeTimes->{{3.4488907595418696`*^9, 3.448890805198412*^9}},
+ TextAlignment->Center],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"G", "[", 
+   RowBox[{"x_", ",", "y_"}], "]"}], ":=", "\[Placeholder]"}]], "Input",
+ CellChangeTimes->{{3.4487051884728193`*^9, 3.4487052139299965`*^9}, 
+   3.448705554870654*^9, {3.4487061561636543`*^9, 3.448706210811036*^9}, 
+   3.4487064686017437`*^9, {3.448706515924284*^9, 3.448706523342834*^9}, {
+   3.4487065618880577`*^9, 3.448706565527052*^9}, {3.4487067474767523`*^9, 
+   3.448706747773494*^9}, 3.4487081381034718`*^9, {3.4487088567188883`*^9, 
+   3.448708882051284*^9}, {3.448708923126624*^9, 3.4487089548936357`*^9}, {
+   3.4487090799625797`*^9, 3.44870909589294*^9}, 3.448709136249852*^9, 
+   3.448889788129402*^9, {3.4488900517717147`*^9, 3.448890058349882*^9}, {
+   3.448890114147114*^9, 3.4488901171783834`*^9}, 3.448890222569683*^9, {
+   3.4488903457735963`*^9, 3.4488903548361545`*^9}, {3.448890607587772*^9, 
+   3.4488906336973143`*^9}, {3.4488908159953556`*^9, 3.448890833682969*^9}, 
+   3.448891421467981*^9, {3.4488915076560326`*^9, 3.4488915312811832`*^9}, {
+   3.4488916080785503`*^9, 3.4488916719539585`*^9}, {3.4488917473606915`*^9, 
+   3.4488917513763423`*^9}, {3.448895658541973*^9, 3.448895665417017*^9}, 
+   3.448896126701219*^9}],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Open this cell for Mathematica hints on vector/matrix \
+multiplication",
+ FontSlant->"Italic"]], "Subsubsection",
+ CellChangeTimes->{{3.4483574322850094`*^9, 3.4483574786581173`*^9}}],
+
+Cell[TextData[{
+ StyleBox["A vector ",
+  FontSize->18],
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"(", GridBox[{
+      {"x"},
+      {"y"}
+     }], ")"}], TraditionalForm]]],
+ " ",
+ StyleBox["can be represented in ",
+  FontSize->18],
+ StyleBox["Mathematica",
+  FontSize->18,
+  FontSlant->"Italic"],
+ StyleBox[" as: ",
+  FontSize->18],
+ StyleBox["{x,y}", "Input",
+  FontSize->18,
+  FontColor->RGBColor[0, 0, 1]],
+ "\n",
+ StyleBox["A matrix ",
+  FontSize->18],
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"(", GridBox[{
+      {"a", "b"},
+      {"c", "d"}
+     }], ")"}], TraditionalForm]]],
+ " ",
+ StyleBox["can be represented in ",
+  FontSize->18],
+ StyleBox["Mathematica",
+  FontSize->18,
+  FontSlant->"Italic"],
+ StyleBox[" as: ",
+  FontSize->18],
+ StyleBox["{{a,b},{c,d}}", "Input",
+  FontSize->18,
+  FontColor->RGBColor[0, 0, 1]],
+ "\n",
+ StyleBox["An inverse matrix ",
+  FontSize->18],
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox[
+    RowBox[{"(", GridBox[{
+       {"a", "b"},
+       {"c", "d"}
+      }], ")"}], 
+    RowBox[{"-", "1"}]], TraditionalForm]]],
+ " ",
+ StyleBox["can be represented in ",
+  FontSize->18],
+ StyleBox["Mathematica",
+  FontSize->18,
+  FontSlant->"Italic"],
+ StyleBox[" as:  ",
+  FontSize->18],
+ StyleBox["Inverse[{", "Input",
+  FontSize->18,
+  FontColor->RGBColor[0, 0, 1]],
+ StyleBox["{a,b},{c,d}}]", "Input",
+  FontSize->18,
+  FontColor->RGBColor[0, 0, 1]],
+ "\n",
+ StyleBox["A matrix-vector multiplication ",
+  FontSize->18],
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"(", GridBox[{
+      {"a", "b"},
+      {"c", "d"}
+     }], ")"}], TraditionalForm]]],
+ " ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"(", GridBox[{
+      {"x"},
+      {"y"}
+     }], ")"}], TraditionalForm]]],
+ " ",
+ StyleBox["can be represented in ",
+  FontSize->18],
+ StyleBox["Mathematica",
+  FontSize->18,
+  FontSlant->"Italic"],
+ StyleBox[" as:  ",
+  FontSize->18],
+ StyleBox["{{a,b},{c,d}}.{x,y}", "Input",
+  FontSize->18,
+  FontColor->RGBColor[0, 0, 1]]
+}], "Text",
+ CellChangeTimes->{3.441031678044974*^9},
+ TextAlignment->Center,
+ Background->RGBColor[
+  0.7529411764705882, 0.7529411764705882, 0.7529411764705882]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Open this cell for a command to use for an exact line \
+search",
+ FontSlant->"Italic"]], "Subsubsection",
+ CellChangeTimes->{{3.4483574322850094`*^9, 3.4483574786581173`*^9}, {
+  3.448891104512827*^9, 3.4488911314348745`*^9}}],
+
+Cell[TextData[{
+ StyleBox["ExactStep[", "Input",
+  FontSize->18,
+  FontColor->RGBColor[0, 0, 1]],
+ Cell[BoxData[
+  StyleBox[
+   SubscriptBox["x", "old"],
+   FontFamily->"Courier New",
+   FontWeight->"Bold",
+   FontColor->RGBColor[0, 0, 1]]],
+  CellChangeTimes->{{3.448363379304192*^9, 3.4483634396251564`*^9}},
+  TextAlignment->Center,
+  FontSize->18],
+ StyleBox[",", "Input",
+  FontSize->18,
+  FontColor->RGBColor[0, 0, 1]],
+ Cell[BoxData[
+  StyleBox[
+   SubscriptBox["y", "old"],
+   FontFamily->"Courier New",
+   FontWeight->"Bold",
+   FontColor->RGBColor[0, 0, 1]]],
+  CellChangeTimes->{{3.448363379304192*^9, 3.4483634396251564`*^9}},
+  TextAlignment->Center,
+  FontSize->18],
+ StyleBox[",{d1,d2}] ", "Input",
+  FontSize->18,
+  FontColor->RGBColor[0, 0, 1]],
+ StyleBox["returns the step-factor ",
+  FontSize->18,
+  FontColor->GrayLevel[0]],
+ StyleBox["\[Alpha]",
+  FontSize->14],
+ StyleBox[" from the exact line search minimizing f(x,y) in the \
+step-direction ",
+  FontSize->18,
+  FontColor->GrayLevel[0]],
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"[", GridBox[{
+      {"d1"},
+      {"d2"}
+     }], "]"}], TraditionalForm]],
+  FontSize->14],
+ StyleBox[" from the base point (",
+  FontSize->18,
+  FontColor->GrayLevel[0]],
+ Cell[BoxData[
+  SubscriptBox["x", "old"]],
+  CellChangeTimes->{{3.448363379304192*^9, 3.4483634396251564`*^9}},
+  TextAlignment->Center,
+  FontSize->18],
+ StyleBox[",",
+  FontSize->18,
+  FontColor->GrayLevel[0]],
+ Cell[BoxData[
+  SubscriptBox["y", "old"]],
+  CellChangeTimes->{{3.448363379304192*^9, 3.4483634396251564`*^9}},
+  TextAlignment->Center,
+  FontSize->18],
+ StyleBox[") .  This needs to be computed separately before defining the \
+iteration function at each iteration. ",
+  FontSize->18,
+  FontColor->GrayLevel[0]]
+}], "Text",
+ CellChangeTimes->{
+  3.441031678044974*^9, {3.4488911505287466`*^9, 3.4488912120760155`*^9}, {
+   3.44889124554498*^9, 3.448891366608255*^9}, {3.5278686103778296`*^9, 
+   3.5278686412034297`*^9}, {3.52786880470183*^9, 3.52786887596263*^9}},
+ TextAlignment->Center,
+ Background->RGBColor[
+  0.7529411764705882, 0.7529411764705882, 0.7529411764705882]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Open this cell for commands to use for the SQP method",
+ FontSlant->"Italic"]], "Subsubsection",
+ CellChangeTimes->{{3.4483574322850094`*^9, 3.4483574786581173`*^9}, {
+  3.448891104512827*^9, 3.4488911314348745`*^9}, {3.527437576612301*^9, 
+  3.5274375930079007`*^9}}],
+
+Cell[TextData[{
+ StyleBox["QP[xo,yo,\[Lambda]o] ", "Input",
+  FontSize->18,
+  FontColor->RGBColor[0, 0, 1]],
+ StyleBox["returns the solution to the QP for the old guess (xo,yo) with old \
+multiplier \[Lambda]o.  ",
+  FontSize->18,
+  FontColor->GrayLevel[0]]
+}], "Text",
+ Editable->False,
+ CellChangeTimes->{
+  3.441031678044974*^9, {3.4488911505287466`*^9, 3.4488912120760155`*^9}, {
+   3.44889124554498*^9, 3.448891366608255*^9}, {3.448904944578125*^9, 
+   3.448904967734375*^9}, {3.448904997953125*^9, 3.4489050733125*^9}, {
+   3.4489051689375*^9, 3.448905179671875*^9}, {3.4506883473137503`*^9, 
+   3.4506883815637503`*^9}, {3.4506884144543753`*^9, 
+   3.4506884330793753`*^9}, {3.527266880171875*^9, 3.527266903421875*^9}, {
+   3.5302816702525015`*^9, 3.5302817480029016`*^9}, {3.5302818046465015`*^9, 
+   3.5302818056449013`*^9}, 3.571235121765625*^9, {3.575128199135171*^9, 
+   3.5751283045767517`*^9}, {3.594485372791892*^9, 3.5944853826827993`*^9}},
+ TextAlignment->Center,
+ Background->RGBColor[
+  0.7529411764705882, 0.7529411764705882, 0.7529411764705882]],
+
+Cell[TextData[{
+ StyleBox["QPlambda[\[Lambda]o] ", "Input",
+  FontSize->18,
+  FontColor->RGBColor[0, 0, 1]],
+ StyleBox["returns the multiplier ",
+  FontSize->18,
+  FontColor->GrayLevel[0]],
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["\[Lambda]", "qp"], TraditionalForm]]],
+ StyleBox[" associated with the QP ",
+  FontSize->18,
+  FontColor->GrayLevel[0]]
+}], "Text",
+ Editable->False,
+ CellChangeTimes->{
+  3.441031678044974*^9, {3.4488911505287466`*^9, 3.4488912120760155`*^9}, {
+   3.44889124554498*^9, 3.448891366608255*^9}, {3.448904944578125*^9, 
+   3.448904967734375*^9}, {3.448904997953125*^9, 3.4489050733125*^9}, {
+   3.4489051689375*^9, 3.448905179671875*^9}, {3.4506883473137503`*^9, 
+   3.4506883815637503`*^9}, {3.4506884144543753`*^9, 
+   3.4506884330793753`*^9}, {3.527266880171875*^9, 3.527266903421875*^9}, {
+   3.5273508430444555`*^9, 3.5273509530556555`*^9}, {3.527350983850055*^9, 
+   3.527351014207655*^9}, {3.530281694073702*^9, 3.5302816951969013`*^9}, {
+   3.530281807064502*^9, 3.5302818080005016`*^9}, {3.571235123265625*^9, 
+   3.571235125484375*^9}, {3.5721048256632295`*^9, 3.572104825940257*^9}, {
+   3.5751283286322603`*^9, 3.5751283602850657`*^9}, {3.594471250477598*^9, 
+   3.5944712997579985`*^9}, {3.594472115583598*^9, 3.5944721479067984`*^9}, {
+   3.5944856049202447`*^9, 3.5944856432345815`*^9}},
+ TextAlignment->Center,
+ Background->RGBColor[
+  0.7529411764705882, 0.7529411764705882, 0.7529411764705882]]
+}, Closed]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Computing Guesses",
+ Editable->True]], "Section",
+ Editable->False,
+ CellChangeTimes->{{3.4387111600265975`*^9, 3.438711160245353*^9}, {
+  3.448356834854435*^9, 3.448356845491042*^9}},
+ TextAlignment->Center,
+ FontColor->RGBColor[0, 0, 1]],
+
+Cell[TextData[StyleBox["ENTER the command below to update the new guess from \
+the old.  Repeat as often as you like.",
+ FontSize->16]], "Text",
+ Editable->False,
+ CellChangeTimes->{{3.438710920426714*^9, 3.4387109790375896`*^9}, {
+  3.438711167917425*^9, 3.438711204371483*^9}, {3.43871127027942*^9, 
+  3.4387112882955065`*^9}, {3.439034326320598*^9, 3.4390343444779387`*^9}, {
+  3.4390373911637306`*^9, 3.4390374406824217`*^9}, {3.44103181453187*^9, 
+  3.441031816500431*^9}, {3.448293604740164*^9, 3.4482936095371923`*^9}, {
+  3.448370027078125*^9, 3.448370032109375*^9}, {3.52483538673335*^9, 
+  3.524835388730137*^9}},
+ FontSize->14],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"IterateOpt", "[", 
+   RowBox[{"Last", "[", "guess", "]"}], "]"}], ";", 
+  RowBox[{"Print", "[", 
+   RowBox[{"VisualOpt", "[", "guess", "]"}], "]"}]}]], "Input",
+ CellChangeTimes->{3.594295899708933*^9}],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Open this cell for details on how to extract old \
+guesses from the full list",
+ FontSlant->"Italic"]], "Subsubsection",
+ Editable->False,
+ CellChangeTimes->{{3.4483574322850094`*^9, 3.4483574786581173`*^9}, {
+  3.448705397878518*^9, 3.448705408061454*^9}, {3.4487055847322702`*^9, 
+  3.448705605535446*^9}}],
+
+Cell[TextData[{
+ "If at any time, you need to compute something else involving the guesses, \
+you can extract them from the list ",
+ StyleBox["guess", "Input",
+  FontWeight->"Bold"],
+ " in which they are stored.  For example, the x and y coordinates \
+respectively of the newest guess are obtained by entering"
+}], "Text",
+ Editable->False,
+ CellChangeTimes->{{3.441031823968464*^9, 3.4410318301084995`*^9}, {
+   3.4410321972919965`*^9, 3.4410322949544945`*^9}, {3.441032338622177*^9, 
+   3.4410323507616367`*^9}, 3.4410325875826497`*^9, {3.4410327267724113`*^9, 
+   3.4410327280847855`*^9}, 3.441032824330944*^9},
+ FontSize->16,
+ Background->RGBColor[
+  0.7529411764705882, 0.7529411764705882, 0.7529411764705882]],
+
+Cell[BoxData[{
+ RowBox[{"guess", "[", 
+  RowBox[{"[", 
+   RowBox[{
+    RowBox[{"-", "1"}], ",", "1"}], "]"}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{"guess", "[", 
+  RowBox[{"[", 
+   RowBox[{
+    RowBox[{"-", "1"}], ",", "2"}], "]"}], "]"}]}], "Input",
+ Editable->False,
+ CellChangeTimes->{{3.4387110098977547`*^9, 3.43871101521039*^9}, {
+  3.4390375327706623`*^9, 3.4390376051546926`*^9}, {3.439037712683282*^9, 
+  3.439037716716776*^9}, {3.439038103092219*^9, 3.439038112676535*^9}, {
+  3.4390389583193994`*^9, 3.439038982083451*^9}, {3.439039604015546*^9, 
+  3.4390396237034235`*^9}, {3.4390397030486965`*^9, 3.4390397139239054`*^9}, {
+  3.441032304094242*^9, 3.4410323220925145`*^9}, {3.4410323537301016`*^9, 
+  3.441032367822499*^9}, {3.5937915960050545`*^9, 3.5937916184693007`*^9}},
+ TextAlignment->Center,
+ Background->RGBColor[
+  0.7529411764705882, 0.7529411764705882, 0.7529411764705882]],
+
+Cell[TextData[{
+ "The ",
+ StyleBox["-1", "Input"],
+ " in the notation ",
+ StyleBox["[[-1,1]]", "Input"],
+ " refers to the last element of the list of pairs, and the ",
+ StyleBox["1 ", "Input"],
+ "(or  ",
+ StyleBox["2", "Input"],
+ " ) identifies the first (or second) component of the pair."
+}], "Text",
+ Editable->False,
+ CellChangeTimes->{{3.441031823968464*^9, 3.4410318301084995`*^9}, {
+  3.4410321972919965`*^9, 3.4410322949544945`*^9}, {3.441032338622177*^9, 
+  3.4410323507616367`*^9}, {3.441032386414464*^9, 3.441032438487589*^9}, {
+  3.441032554101489*^9, 3.441032568428239*^9}, {3.593791647472201*^9, 
+  3.593791656877141*^9}, {3.593791692941747*^9, 3.5937917640408564`*^9}},
+ FontSize->16,
+ Background->RGBColor[
+  0.7529411764705882, 0.7529411764705882, 0.7529411764705882]]
+}, Closed]]
+}, Open  ]]
+},
+AutoGeneratedPackage->None,
+CellGrouping->Manual,
+WindowSize->{1264, 985},
+WindowMargins->{{282, Automatic}, {Automatic, 32}},
+Magnification->1.350000023841858,
+FrontEndVersion->"10.1 for Microsoft Windows (64-bit) (March 23, 2015)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 271, 6, 96, "Subtitle"],
+Cell[854, 30, 279, 4, 136, "Text"]
+}, Closed]],
+Cell[1148, 37, 932, 18, 68, "Text"],
+Cell[CellGroupData[{
+Cell[2105, 59, 429, 9, 93, "Section",
+ InitializationCell->True],
+Cell[2537, 70, 41241, 1065, 3419, "Input",
+ InitializationCell->True]
+}, Closed]],
+Cell[43793, 1138, 1093, 18, 97, "Text"],
+Cell[44889, 1158, 218, 4, 41, "Input"],
+Cell[CellGroupData[{
+Cell[45132, 1166, 248, 5, 93, "Section"],
+Cell[45383, 1173, 142, 2, 65, "Subsection"],
+Cell[45528, 1177, 1390, 25, 68, "Text"],
+Cell[46921, 1204, 401, 15, 70, "Text"],
+Cell[47325, 1221, 647, 11, 43, "Text"],
+Cell[47975, 1234, 170, 4, 43, "Text"],
+Cell[48148, 1240, 740, 20, 69, "Text"],
+Cell[48891, 1262, 408, 8, 43, "Text"],
+Cell[49302, 1272, 886, 31, 67, "Input"],
+Cell[50191, 1305, 1194, 18, 41, "Input"],
+Cell[CellGroupData[{
+Cell[51410, 1327, 207, 3, 51, "Subsubsection"],
+Cell[51620, 1332, 2101, 96, 85480, "Text"]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[53758, 1433, 250, 4, 41, "Subsubsection"],
+Cell[54011, 1439, 2114, 71, 54001, "Text"]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[56162, 1515, 292, 4, 41, "Subsubsection"],
+Cell[56457, 1521, 1067, 22, 986, "Text"],
+Cell[57527, 1545, 1442, 31, 986, "Text"]
+}, Closed]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[59018, 1582, 263, 6, 93, "Section"],
+Cell[59284, 1590, 638, 11, 43, "Text"],
+Cell[59925, 1603, 237, 6, 41, "Input"],
+Cell[CellGroupData[{
+Cell[60187, 1613, 332, 6, 51, "Subsubsection"],
+Cell[60522, 1621, 715, 15, 11608, "Text"],
+Cell[61240, 1638, 900, 19, 9995, "Input"],
+Cell[62143, 1659, 785, 19, 11608, "Text"]
+}, Closed]]
+}, Open  ]]
+}
+]
+*)
+
